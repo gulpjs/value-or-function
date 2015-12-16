@@ -1,0 +1,38 @@
+{
+  "name": "value-or-function",
+  "version": "0.0.0",
+  "description": "",
+  "author": "Gulp Team <team@gulpjs.com> (http://gulpjs.com/)",
+  "contributors": [],
+  "homepage": "http://gulpjs.com",
+  "repository": "gulpjs/value-or-function",
+  "license": "MIT",
+  "engines": {
+    "node": ">= 0.10"
+  },
+  "main": "index.js",
+  "files": [
+    "index.js"
+  ],
+  "scripts": {
+    "lint": "eslint . && jscs *.js test/",
+    "pretest": "npm run lint",
+    "test": "mocha",
+    "coveralls": "istanbul cover _mocha --report lcovonly && istanbul-coveralls"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "coveralls": "^2.11.2",
+    "eslint": "^1.7.3",
+    "eslint-config-gulp": "^2.0.0",
+    "istanbul": "^0.3.0",
+    "istanbul-coveralls": "^1.0.1",
+    "jscs": "^2.3.5",
+    "jscs-preset-gulp": "^1.0.0",
+    "mocha": "^2.0.0",
+    "mocha-lcov-reporter": "^0.0.2",
+    "should": "^7.1.0"
+  },
+  "keywords": [
+  ]
+}
