@@ -7,7 +7,7 @@ var types = [
   'symbol',
   'boolean',
   'function', // Weird to expose this
-  'undefined'
+  'undefined',
 ];
 
 function normalize(type, value) {

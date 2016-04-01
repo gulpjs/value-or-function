@@ -15,24 +15,23 @@
     "index.js"
   ],
   "scripts": {
-    "lint": "eslint . && jscs *.js test/",
+    "lint": "eslint . && jscs index.js test/",
     "pretest": "npm run lint",
-    "test": "mocha",
-    "coveralls": "istanbul cover _mocha --report lcovonly && istanbul-coveralls"
+    "test": "mocha --async-only",
+    "cover": "istanbul cover _mocha --report lcovonly",
+    "coveralls": "npm run cover && istanbul-coveralls"
   },
-  "dependencies": {},
   "devDependencies": {
     "coveralls": "^2.11.2",
     "eslint": "^1.7.3",
     "eslint-config-gulp": "^2.0.0",
+    "expect": "^1.16.0",
     "istanbul": "^0.3.0",
     "istanbul-coveralls": "^1.0.1",
     "jscs": "^2.3.5",
     "jscs-preset-gulp": "^1.0.0",
     "mocha": "^2.0.0",
-    "mocha-lcov-reporter": "^0.0.2",
-    "should": "^7.1.0"
+    "mocha-lcov-reporter": "^0.0.2"
   },
-  "keywords": [
-  ]
+  "keywords": []
 }
