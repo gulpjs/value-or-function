@@ -4,7 +4,6 @@
   "description": "Normalize a value or function, applying extra args to the function",
   "author": "Gulp Team <team@gulpjs.com> (http://gulpjs.com/)",
   "contributors": [],
-  "homepage": "http://gulpjs.com",
   "repository": "gulpjs/value-or-function",
   "license": "MIT",
   "engines": {
@@ -21,6 +20,7 @@
     "cover": "istanbul cover _mocha --report lcovonly",
     "coveralls": "npm run cover && istanbul-coveralls"
   },
+  "dependencies": {},
   "devDependencies": {
     "coveralls": "^2.11.2",
     "eslint": "^1.10.3",
