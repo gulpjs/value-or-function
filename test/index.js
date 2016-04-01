@@ -43,6 +43,16 @@ describe('normalize', function() {
     expect(result).toEqual(expected);
     done();
   });
+
+  it('returns null if result of function does not match type', function(done) {
+    var type = 'string';
+    var value = function() {
+      return 123;
+    };
+    var result = normalize(type, value);
+    expect(result).toEqual(null);
+    done();
+  });
 });
 
 describe('normalize.object', function() {

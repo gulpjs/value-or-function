@@ -20,7 +20,17 @@ function normalize(type, value) {
     return null;
   }
 
-  return isType ? value : value.apply(null, args);
+  if (isType) {
+    return value;
+  }
+
+  var result = value.apply(null, args);
+
+  if (typeof result !== type) {
+    return null;
+  }
+
+  return result;
 }
 
 // Add methods for each type
