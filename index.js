@@ -13,11 +13,14 @@ var types = [
 function normalize(type, value) {
   var args = Array.prototype.slice.call(arguments, 2);
 
-  if (typeof value !== type && typeof value !== 'function') {
+  var isType = typeof value === type;
+  var isFunction = typeof value === 'function';
+
+  if (!isType && !isFunction) {
     return null;
   }
 
-  return typeof value === type ? value : value.apply(null, args);
+  return isType ? value : value.apply(null, args);
 }
 
 // Add methods for each type
