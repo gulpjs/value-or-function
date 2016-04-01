@@ -49,38 +49,39 @@ var result = normalize.undefined(undefined);
 
 ### `normalize(type, value[, ...appliedArguments])`
 
-Takes a string of the type to match and a value to call `typeof` on. Also optionally takes any extra
-arguments to apply to `value` if `value` is a function.
+Takes a string of the `type` to match and a `value` to compare with `typeof`. Also optionally takes any extra arguments to apply to `value` if `value` is a function.
 
-If the results of `typeof value === type` is true, the value is returned. If false and the value is a function, the function is called with any extra arguments supplied to `normalize`.
+If the results of `typeof value === type` is true, the value is returned. If false and `value` is a function, the function is called with any extra arguments supplied to `normalize`.
 
 If `value` is neither a type match or a function, `null` is returned.
 
-### `normalize.object(value[, ...appliedArguments])`
+If `value` is a function and the result of calling the function does not match the type, `null` is returned.
+
+#### `normalize.object(value[, ...appliedArguments])`
 
 Convenience method for `normalize('object', ...)`.
 
-### `normalize.number(value[, ...appliedArguments])`
+#### `normalize.number(value[, ...appliedArguments])`
 
 Convenience method for `normalize('number', ...)`.
 
-### `normalize.string(value[, ...appliedArguments])`
+#### `normalize.string(value[, ...appliedArguments])`
 
 Convenience method for `normalize('string', ...)`.
 
-### `normalize.symbol(value[, ...appliedArguments])`
+#### `normalize.symbol(value[, ...appliedArguments])`
 
 Convenience method for `normalize('symbol', ...)`.
 
-### `normalize.boolean(value[, ...appliedArguments])`
+#### `normalize.boolean(value[, ...appliedArguments])`
 
 Convenience method for `normalize('boolean', ...)`.
 
-### `normalize.function(value[, ...appliedArguments])`
+#### `normalize.function(value[, ...appliedArguments])`
 
 Convenience method for `normalize('function', ...)`.
 
-### `normalize.undefined(value[, ...appliedArguments])`
+#### `normalize.undefined(value[, ...appliedArguments])`
 
 Convenience method for `normalize('undefined', ...)`.
 
