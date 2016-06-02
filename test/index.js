@@ -22,6 +22,53 @@ describe('normalize', function() {
     done();
   });
 
+  it('supports arrays for the type parameter', function(done) {
+    var type = ['string'];
+    var value = 'test string';
+    var result = normalize(type, value);
+    expect(result).toEqual(value);
+    done();
+  });
+
+  it('compares each type and the type of the value', function(done) {
+    var type = ['number', 'string', 'object'];
+    var value = 'test string';
+    var result = normalize(type, value);
+    expect(result).toEqual(value);
+    done();
+  });
+
+  it('returns null if value does not match any type', function(done) {
+    var type = ['string', 'undefined'];
+    var value = 1;
+    var result = normalize(type, value);
+    expect(result).toEqual(null);
+    done();
+  });
+
+  it('supports functions for the type parameter', function(done) {
+    var type = function() {
+      return true;
+    };
+    var value = 1;
+    var result = normalize(type, value);
+    expect(result).toEqual(value);
+    done();
+  });
+
+  it('calls the type function to check validity', function(done) {
+    var called = false;
+    var type = function() {
+      called = true;
+      return false;
+    };
+    var value = 1;
+    var result = normalize(type, value);
+    expect(result).toEqual(null);
+    expect(called).toEqual(true);
+    done();
+  });
+
   it('calls the value if it is a function', function(done) {
     var type = 'string';
     var expected = 'test string';

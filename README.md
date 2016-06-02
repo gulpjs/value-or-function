@@ -49,13 +49,17 @@ var result = normalize.undefined(undefined);
 
 ### `normalize(type, value[, ...appliedArguments])`
 
-Takes a string of the `type` to match and a `value` to compare with `typeof`. Also optionally takes any extra arguments to apply to `value` if `value` is a function.
+Takes a predicate function `type` to test against `value`. Also optionally takes any extra arguments to apply to `value` if `value` is a function.
 
-If the results of `typeof value === type` is true, the value is returned. If false and `value` is a function, the function is called with any extra arguments supplied to `normalize`.
+If the result of `type(value)` is true, the value is returned. If false and `value` is a function, the function is called with any extra arguments supplied to `normalize`.
 
 If `value` is neither a type match or a function, `null` is returned.
 
 If `value` is a function and the result of calling the function does not match the type, `null` is returned.
+
+If `type` is a string, the applied predicate is `typeof value === type`.
+
+If `type` is an array, each element is tested against `value` in turn until one matches or none matches.
 
 #### `normalize.object(value[, ...appliedArguments])`
 
