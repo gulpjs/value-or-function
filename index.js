@@ -13,7 +13,7 @@ var types = [
 function normalize(type, value) {
   var args = Array.prototype.slice.call(arguments, 2);
 
-  var isType = typeof value === type;
+  var isType = conforms(type, value);
   var isFunction = typeof value === 'function';
 
   if (!isType && !isFunction) {
@@ -31,6 +31,18 @@ function normalize(type, value) {
   }
 
   return result;
+}
+
+function conforms(type, value) {
+  if (typeof type === 'string') {
+    return typeof value === type;
+  }
+  if (typeof type === 'function') {
+    return !!type(value);
+  }
+  return type.some(function(type) {
+    return conforms(type, value);
+  });
 }
 
 // Add methods for each type
