@@ -80,6 +80,22 @@ describe('normalize', function() {
     done();
   });
 
+  it('checks the result of function against predicate', function(done) {
+    var expected = 'test string';
+    var called = false;
+    var predicate = function(value) {
+      called = true;
+      return (typeof value === 'string');
+    };
+    var value = function() {
+      return expected;
+    };
+    var result = normalize(predicate, value);
+    expect(result).toEqual(expected);
+    expect(called).toEqual(true);
+    done();
+  });
+
   it('calls the function, passing extra arguments', function(done) {
     var type = 'string';
     var expected = 'test string';
@@ -97,6 +113,18 @@ describe('normalize', function() {
       return 123;
     };
     var result = normalize(type, value);
+    expect(result).toEqual(null);
+    done();
+  });
+
+  it('returns null if the result of function does not satisfy predicate', function(done) {
+    var predicate = function(value) {
+      return (typeof value === 'string');
+    };
+    var value = function() {
+      return 123;
+    };
+    var result = normalize(predicate, value);
     expect(result).toEqual(null);
     done();
   });

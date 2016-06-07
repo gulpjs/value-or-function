@@ -26,11 +26,11 @@ function normalize(type, value) {
 
   var result = value.apply(null, args);
 
-  if (typeof result !== type) {
-    return null;
+  if (conforms(type, result)) {
+    return result;
   }
 
-  return result;
+  return null;
 }
 
 function conforms(type, value) {
