@@ -38,7 +38,7 @@ function conforms(type, value) {
     return typeof value === type;
   }
   if (typeof type === 'function') {
-    return Boolean(type(value));
+    return !!type(value);
   }
   return type.some(function(type) {
     return conforms(type, value);
