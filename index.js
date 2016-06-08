@@ -50,4 +50,12 @@ types.forEach(function(type) {
   normalize[type] = normalize.bind(null, type);
 });
 
+function dateOrTimestamp(value) {
+  return typeof value === 'number' ||
+    value instanceof Number ||
+    value instanceof Date;
+}
+
+normalize.date = normalize.bind(null, dateOrTimestamp);
+
 module.exports = normalize;

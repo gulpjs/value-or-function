@@ -54,6 +54,8 @@ var result = normalize.symbol(Symbol());
 var result = normalize.boolean(true);
 var result = normalize.function(function() {});
 var result = normalize.undefined(undefined);
+var result = normalize.date(new Date());
+var result = normalize.date(1);
 ```
 
 ## API
@@ -99,6 +101,10 @@ Convenience method for `normalize('function', ...)`.
 #### `normalize.undefined(value[, ...appliedArguments])`
 
 Convenience method for `normalize('undefined', ...)`.
+
+#### `normalize.date(value[, ...appliedArguments])`
+
+Convenience method for `normalize(dateOrTimestamp, ...)` where `dateOrTimestamp` accepts both numbers and instances of `Date`.
 
 ## License
 
