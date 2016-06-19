@@ -241,3 +241,27 @@ describe('normalize.undefined', function() {
     done();
   });
 });
+
+describe('normalize.date', function() {
+
+  it('compares value to typeof number', function(done) {
+    var value = 1;
+    var result = normalize.date(value);
+    expect(result).toEqual(value);
+    done();
+  });
+
+  it('accepts object that are dates', function(done) {
+    var value = new Date();
+    var result = normalize.date(value);
+    expect(result).toEqual(value);
+    done();
+  });
+
+  it('rejects object that are not dates', function(done) {
+    var value = {};
+    var result = normalize.date(value);
+    expect(result).toEqual(null);
+    done();
+  });
+});
