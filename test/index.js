@@ -251,7 +251,14 @@ describe('normalize.date', function() {
     done();
   });
 
-  it('accepts object that are dates', function(done) {
+  it('accepts objects that are Numbers', function(done) {
+    var value = new Number(1);
+    var result = normalize.date(value);
+    expect(result).toEqual(value);
+    done();
+  });
+
+  it('accepts objects that are Dates', function(done) {
     var value = new Date();
     var result = normalize.date(value);
     expect(result).toEqual(value);
