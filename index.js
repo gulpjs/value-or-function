@@ -51,9 +51,10 @@ types.forEach(function(type) {
 });
 
 function dateOrTimestamp(value) {
-  return typeof value === 'number' ||
-    value instanceof Number ||
-    value instanceof Date;
+  if (value instanceof Date || value instanceof Number) {
+    value = value.valueOf();
+  }
+  return typeof value === 'number' && !Number.isNaN(value) && Number.isFinite(value);
 }
 
 normalize.date = normalize.bind(null, dateOrTimestamp);
