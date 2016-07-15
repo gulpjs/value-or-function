@@ -251,6 +251,20 @@ describe('normalize.date', function() {
     done();
   });
 
+  it('rejects numbers with not-a-number values', function(done) {
+    var value = Number.NaN;
+    var result = normalize.date(value);
+    expect(result).toEqual(null);
+    done();
+  });
+
+  it('rejects numbers with infinite values', function(done) {
+    var value = Number.POSITIVE_INFINITY;
+    var result = normalize.date(value);
+    expect(result).toEqual(null);
+    done();
+  });
+
   it('accepts objects that are Numbers', function(done) {
     var value = new Number(1);
     var result = normalize.date(value);
@@ -258,10 +272,31 @@ describe('normalize.date', function() {
     done();
   });
 
-  it('accepts objects that are Dates', function(done) {
+  it('rejects Numbers with not-a-number values', function(done) {
+    var value = new Number(Number.NaN);
+    var result = normalize.date(value);
+    expect(result).toEqual(null);
+    done();
+  });
+
+  it('rejects Numbers with infinite values', function(done) {
+    var value = new Number(Number.POSITIVE_INFINITY);
+    var result = normalize.date(value);
+    expect(result).toEqual(null);
+    done();
+  });
+
+  it('accepts objects that are valid Dates', function(done) {
     var value = new Date();
     var result = normalize.date(value);
     expect(result).toEqual(value);
+    done();
+  });
+
+  it('rejects Dates that are invalid', function(done) {
+    var value = new Date(undefined);
+    var result = normalize.date(value);
+    expect(result).toEqual(null);
     done();
   });
 
