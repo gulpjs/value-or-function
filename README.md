@@ -13,7 +13,7 @@ Normalize a value or function, applying extra args to the function
 ## Example
 
 ```js
-var normalize = require('value-of-function');
+var normalize = require('value-or-function');
 
 // Values matching type are returned
 var isEnabled = normalize('boolean', true);
