@@ -1,62 +1,108 @@
 'use strict';
 
+// Built-in types
 var types = [
   'object',
   'number',
   'string',
   'symbol',
   'boolean',
+  'date',
   'function', // Weird to expose this
-  'undefined',
+  'undefined', // And this?
 ];
 
-function normalize(type, value) {
-  var args = Array.prototype.slice.call(arguments, 2);
 
-  var isType = conforms(type, value);
-  var isFunction = typeof value === 'function';
+function normalize(coercer, value) {
+  if (typeof value === 'function') {
+    if (coercer === 'function') {
+      return value;
+    }
+    value = value.apply(null, Array.prototype.slice.call(arguments, 2));
+  }
+  return coerce(coercer, value);
+}
 
-  if (!isType && !isFunction) {
-    return null;
+
+function coerce(coercer, value) {
+
+  // Handle built-in types
+  if (typeof coercer === 'string') {
+    if (coerce[coercer]) {
+      return coerce[coercer](value);
+    }
+    return typeOf(coercer, value);
   }
 
-  if (isType) {
+  // Handle custom coercer
+  if (typeof coercer === 'function') {
+    return coercer(value);
+  }
+
+  // Array of coercers, try in order until one returns a non-null value
+  var result = null;
+  coercer.some(function(coercer) {
+    result = coerce(coercer, value);
+    return result !== null;
+  });
+
+  return result;
+}
+
+
+coerce.string = function(value) {
+  if (value != null &&
+    typeof value === 'object' &&
+    typeof value.toString === 'function') {
+
+    value = value.toString();
+  }
+  return typeOf('string', primitive(value));
+};
+
+
+coerce.number = function(value) {
+  return typeOf('number', primitive(value));
+};
+
+
+coerce.boolean = function(value) {
+  return typeOf('boolean', primitive(value));
+};
+
+
+coerce.date = function(value) {
+  value = primitive(value);
+  if (typeof value === 'number' && !isNaN(value) && isFinite(value)) {
+    return new Date(value);
+  }
+  return null;
+};
+
+
+function typeOf(type, value) {
+  if (typeof value === type) {
     return value;
   }
-
-  var result = value.apply(null, args);
-
-  if (conforms(type, result)) {
-    return result;
-  }
-
   return null;
 }
 
-function conforms(type, value) {
-  if (typeof type === 'string') {
-    return typeof value === type;
+
+function primitive(value) {
+  if (value != null &&
+    typeof value === 'object' &&
+    typeof value.valueOf === 'function') {
+
+    value = value.valueOf();
   }
-  if (typeof type === 'function') {
-    return !!type(value);
-  }
-  return type.some(function(type) {
-    return conforms(type, value);
-  });
+  return value;
 }
+
 
 // Add methods for each type
 types.forEach(function(type) {
   normalize[type] = normalize.bind(null, type);
 });
 
-function dateOrTimestamp(value) {
-  if (value instanceof Date || value instanceof Number) {
-    value = value.valueOf();
-  }
-  return typeof value === 'number' && !Number.isNaN(value) && Number.isFinite(value);
-}
-
-normalize.date = normalize.bind(null, dateOrTimestamp);
 
 module.exports = normalize;
