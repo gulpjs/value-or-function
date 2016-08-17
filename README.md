@@ -39,14 +39,14 @@ var count = normalize('number', function(a, b) {
 var isEnabled = normalize(['string', 'boolean'], true);
 // isEnabled === true
 
-// Values matching predicate are returned
+// Provide a function as first argument to do custom coercion
 var now = new Date();
 var enabledSince = normalize(function(value) {
-  return value.constructor === Date;
+  return value.constructor === Date ? value : null;
 }, now);
 // enabledSince === now
 
-// Convenience methods are available
+// Convenience methods are available for the built-in types
 var result = normalize.object({});
 var result = normalize.number(1);
 var result = normalize.string('');
@@ -55,24 +55,25 @@ var result = normalize.boolean(true);
 var result = normalize.function(function() {});
 var result = normalize.undefined(undefined);
 var result = normalize.date(new Date());
-var result = normalize.date(1);
 ```
 
 ## API
 
-### `normalize(predicate, value[, ...appliedArguments])`
+### `normalize(coercer, value[, ...appliedArguments])`
 
-Takes a predicate function `predicate` to test against `value`. Also optionally takes any extra arguments to apply to `value` if `value` is a function.
+Takes a coercer function `coercer` to transform `value` to the desired type.
+Also optionally takes any extra arguments to apply to `value` if `value` is a function.
 
-If the result of `predicate(value)` is true, the value is returned. If false and `value` is a function, the function is called with any extra arguments supplied to `normalize`.
+If the return value of `coercer(value)` is not `null`, that value is returned.
+Otherwise, if `value` is a function, that function is called with any extra arguments
+supplied to `normalize`, and its return value is passed through the coercer.
 
-If `value` is neither match for the predicate or a function, `null` is returned.
+If `coercer` is a string, it must be one of the built-in types (see below)
+and the appropriate default coercer is invoked, optionally first reducing `value`
+to a primitive type with `.valueOf()` if it is an Object.
 
-If `value` is a function and the result of calling the function does not match the predicate, `null` is returned.
-
-If `predicate` is a string, the applied predicate is `typeof value === predicate`.
-
-If `predicate` is an array, `normalized` is called with each element in turn until one matches or none matches.
+If `coercer` is an array, each element is tried until one returns something other
+than `null`, or it results in `null` if all of the elements yield `null`.
 
 #### `normalize.object(value[, ...appliedArguments])`
 
@@ -104,7 +105,7 @@ Convenience method for `normalize('undefined', ...)`.
 
 #### `normalize.date(value[, ...appliedArguments])`
 
-Convenience method for `normalize(dateOrTimestamp, ...)` where `dateOrTimestamp` accepts both numbers and instances of `Date`.
+Convenience method for `normalize('date', ...)`.
 
 ## License
 

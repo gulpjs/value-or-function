@@ -56,134 +56,198 @@ describe('normalize', function() {
     done();
   });
 
-  it('calls the type function to check validity', function(done) {
-    var called = false;
-    var type = function() {
-      called = true;
-      return false;
-    };
-    var value = 1;
-    var result = normalize(type, value);
-    expect(result).toEqual(null);
-    expect(called).toEqual(true);
+  it('calls the type function to attempt coercion', function(done) {
+    var expected = 1;
+    var type = expect.createSpy().andCall(function(value) {
+      return value;
+    });
+    var result = normalize(type, expected);
+    expect(result).toEqual(expected);
+    expect(type).toHaveBeenCalled();
     done();
   });
 
   it('calls the value if it is a function', function(done) {
     var type = 'string';
     var expected = 'test string';
-    var value = function() {
+    var value = expect.createSpy().andCall(function() {
       return expected;
-    };
+    });
     var result = normalize(type, value);
     expect(result).toEqual(expected);
+    expect(value).toHaveBeenCalled();
     done();
   });
 
-  it('checks the result of function against predicate', function(done) {
+  it('checks the result of function against coercer', function(done) {
     var expected = 'test string';
-    var called = false;
-    var predicate = function(value) {
-      called = true;
-      return (typeof value === 'string');
-    };
-    var value = function() {
+    var coercer = expect.createSpy().andCall(function(value) {
+      return (typeof value === 'string') ? value : null;
+    });
+    var value = expect.createSpy().andCall(function() {
       return expected;
-    };
-    var result = normalize(predicate, value);
+    });
+    var result = normalize(coercer, value);
     expect(result).toEqual(expected);
-    expect(called).toEqual(true);
+    expect(coercer).toHaveBeenCalled();
+    expect(value).toHaveBeenCalled();
     done();
   });
 
   it('calls the function, passing extra arguments', function(done) {
     var type = 'string';
     var expected = 'test string';
-    var value = function(arg) {
+    var value = expect.createSpy().andCall(function(arg) {
       return arg;
-    };
+    });
     var result = normalize(type, value, expected);
     expect(result).toEqual(expected);
+    expect(value).toHaveBeenCalled();
     done();
   });
 
   it('returns null if result of function does not match type', function(done) {
     var type = 'string';
-    var value = function() {
+    var value = expect.createSpy().andCall(function() {
       return 123;
-    };
+    });
     var result = normalize(type, value);
     expect(result).toEqual(null);
+    expect(value).toHaveBeenCalled();
     done();
   });
 
-  it('returns null if the result of function does not satisfy predicate', function(done) {
-    var predicate = function(value) {
-      return (typeof value === 'string');
-    };
-    var value = function() {
+  it('rejects if function return val doesn\'t satisfy custom coercer', function(done) {
+    var coercer = expect.createSpy().andCall(function(value) {
+      return (typeof value === 'string') ? value : null;
+    });
+    var value = expect.createSpy().andCall(function() {
       return 123;
-    };
-    var result = normalize(predicate, value);
+    });
+    var result = normalize(coercer, value);
+    expect(result).toEqual(null);
+    expect(coercer).toHaveBeenCalled();
+    expect(value).toHaveBeenCalled();
+    done();
+  });
+});
+
+describe('normalize.object', function() {
+
+  it('compares value to typeof object', function(done) {
+    var obj = {};
+    var arr = [];
+    var numObj = new Number(1);
+    var strObj = new String('test');
+    var objResult = normalize.object(obj);
+    var arrResult = normalize.object(arr);
+    var numObjResult = normalize.object(numObj);
+    var strObjResult = normalize.object(strObj);
+    expect(objResult).toEqual(obj);
+    expect(arrResult).toEqual(arr);
+    expect(numObjResult).toEqual(numObj);
+    expect(strObjResult).toEqual(strObj);
+    done();
+  });
+
+  it('rejects value if it is null', function(done) {
+    var value = null;
+    var result = normalize.object(value);
     expect(result).toEqual(null);
     done();
   });
-});
 
-describe('normalize.object', function() {
-
-  it('compares value to typeof object', function(done) {
-    var obj = {};
-    var arr = [];
-    var numObj = new Number(1);
-    var strObj = new String('test');
-    var objResult = normalize.object(obj);
-    var arrResult = normalize.object(arr);
-    var numObjResult = normalize.object(numObj);
-    var strObjResult = normalize.object(strObj);
-    expect(objResult).toEqual(obj);
-    expect(arrResult).toEqual(arr);
-    expect(numObjResult).toEqual(numObj);
-    expect(strObjResult).toEqual(strObj);
-    done();
-  });
-});
-
-describe('normalize.object', function() {
-
-  it('compares value to typeof object', function(done) {
-    var obj = {};
-    var arr = [];
-    var numObj = new Number(1);
-    var strObj = new String('test');
-    var objResult = normalize.object(obj);
-    var arrResult = normalize.object(arr);
-    var numObjResult = normalize.object(numObj);
-    var strObjResult = normalize.object(strObj);
-    expect(objResult).toEqual(obj);
-    expect(arrResult).toEqual(arr);
-    expect(numObjResult).toEqual(numObj);
-    expect(strObjResult).toEqual(strObj);
+  it('rejects values if not Object', function(done) {
+    var value = 'invalid';
+    var result = normalize.object(value);
+    expect(result).toEqual(null);
     done();
   });
 });
 
 describe('normalize.number', function() {
 
-  it('compares value to typeof number', function(done) {
+  it('accepts value if typeof number', function(done) {
     var value = 1;
     var result = normalize.number(value);
     expect(result).toEqual(value);
+    done();
+  });
+
+  it('accepts value if it is not-a-number', function(done) {
+    var value = Number.NaN;
+    var result = normalize.number(value);
+    expect(Number.isNaN(result)).toEqual(true);
+    done();
+  });
+
+  it('accepts value if it is infinite', function(done) {
+    var value = Number.NEGATIVE_INFINITY;
+    var result = normalize.number(value);
+    expect(result).toEqual(value);
+    done();
+  });
+
+  it('accepts value if instanceof Number', function(done) {
+    var expected = 1;
+    var value = new Number(expected);
+    var result = normalize.number(value);
+    expect(result).toEqual(expected);
+    done();
+  });
+
+  it('rejects values that won\'t coerce to number', function(done) {
+    var value = 'invalid';
+    var result = normalize.number(value);
+    expect(result).toEqual(null);
     done();
   });
 });
 
 describe('normalize.string', function() {
 
-  it('compares value to typeof string', function(done) {
+  it('accepts value if typeof string', function(done) {
     var value = 'test string';
     var result = normalize.string(value);
     expect(result).toEqual(value);
+    done();
+  });
+
+  it('accepts value if instanceof String', function(done) {
+    var expected = 'test string';
+    var value = new String(expected);
+    var result = normalize.string(value);
+    expect(result).toEqual(expected);
+    done();
+  });
+
+  it('accepts value if it is an Object', function(done) {
+    var expected = 'test string';
+    var value = {
+      toString: function() {
+        return expected;
+      },
+    };
+    var result = normalize.string(value);
+    expect(result).toEqual(expected);
+    done();
+  });
+
+  it('rejects Object if its toString doesn\'t return string', function(done) {
+    var value = {
+      toString: function() {
+        return {};
+      },
+    };
+    var result = normalize.string(value);
+    expect(result).toEqual(null);
+    done();
+  });
+
+  it('rejects values that won\'t coerce to string', function(done) {
+    var value = undefined;
+    var result = normalize.string(value);
+    expect(result).toEqual(null);
     done();
   });
 });
@@ -202,21 +266,48 @@ describe('normalize.symbol', function() {
     expect(result).toEqual(value);
     done();
   });
+
+  it('rejects values that are not Symbol', function(done) {
+    if (!global.Symbol) {
+      console.log('Only available on platforms that support Symbol');
+      this.skip();
+      return;
+    }
+    var value = 'invalid';
+    var result = normalize.symbol(value);
+    expect(result).toEqual(null);
+    done();
+  });
 });
 
 describe('normalize.boolean', function() {
 
-  it('compares value to typeof boolean', function(done) {
+  it('accepts value if typeof boolean', function(done) {
     var value = true;
     var result = normalize.boolean(value);
     expect(result).toEqual(value);
+    done();
+  });
+
+  it('accepts value if instanceof Boolean', function(done) {
+    var expected = true;
+    var value = new Boolean(expected);
+    var result = normalize.boolean(value);
+    expect(result).toEqual(expected);
+    done();
+  });
+
+  it('rejects values that won\'t coerce to boolean', function(done) {
+    var value = 'invalid';
+    var result = normalize.boolean(value);
+    expect(result).toEqual(null);
     done();
   });
 });
 
 describe('normalize.function', function() {
 
-  it('compares value to typeof function', function(done) {
+  it('accepts value if typeof function', function(done) {
     var value = function() {};
     var result = normalize.function(value);
     expect(result).toEqual(value);
@@ -230,6 +321,13 @@ describe('normalize.function', function() {
     expect(value).toNotHaveBeenCalled();
     done();
   });
+
+  it('rejects values that won\'t coerce to function', function(done) {
+    var value = 'invalid';
+    var result = normalize.function(value);
+    expect(result).toEqual(null);
+    done();
+  });
 });
 
 describe('normalize.undefined', function() {
@@ -240,14 +338,22 @@ describe('normalize.undefined', function() {
     expect(result).toEqual(value);
     done();
   });
+
+  it('rejects values that won\'t coerce to undefined', function(done) {
+    var value = 'invalid';
+    var result = normalize.undefined(value);
+    expect(result).toEqual(null);
+    done();
+  });
 });
 
 describe('normalize.date', function() {
 
-  it('compares value to typeof number', function(done) {
+  it('coerces a number to a Date object', function(done) {
     var value = 1;
+    var expected = new Date(value);
     var result = normalize.date(value);
-    expect(result).toEqual(value);
+    expect(result).toEqual(expected);
     done();
   });
 
@@ -267,8 +373,9 @@ describe('normalize.date', function() {
 
   it('accepts objects that are Numbers', function(done) {
     var value = new Number(1);
+    var expected = new Date(value);
     var result = normalize.date(value);
-    expect(result).toEqual(value);
+    expect(result).toEqual(expected);
     done();
   });
 
@@ -301,7 +408,7 @@ describe('normalize.date', function() {
   });
 
   it('rejects object that are not dates', function(done) {
-    var value = {};
+    var value = 'invalid';
     var result = normalize.date(value);
     expect(result).toEqual(null);
     done();
