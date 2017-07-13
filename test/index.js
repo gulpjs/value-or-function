@@ -79,6 +79,17 @@ describe('normalize', function() {
     done();
   });
 
+  it('calls the value function with context, if bound', function(done) {
+    var type = 'string';
+    var context = {};
+    var value = expect.createSpy().andCall(function() {
+      expect(this).toBe(context);
+    });
+    normalize.bind(context)(type, value);
+    expect(value).toHaveBeenCalled();
+    done();
+  });
+
   it('checks the result of function against coercer', function(done) {
     var expected = 'test string';
     var coercer = expect.createSpy().andCall(function(value) {
@@ -163,6 +174,16 @@ describe('normalize.object', function() {
     expect(result).toEqual(null);
     done();
   });
+
+  it('calls the object function with context, if bound', function(done) {
+    var context = {};
+    var value = expect.createSpy().andCall(function() {
+      expect(this).toBe(context);
+    });
+    normalize.bind(context).object(value);
+    expect(value).toHaveBeenCalled();
+    done();
+  });
 });
 
 describe('normalize.number', function() {
@@ -200,6 +221,16 @@ describe('normalize.number', function() {
     var value = 'invalid';
     var result = normalize.number(value);
     expect(result).toEqual(null);
+    done();
+  });
+
+  it('calls the number function with context, if bound', function(done) {
+    var context = {};
+    var value = expect.createSpy().andCall(function() {
+      expect(this).toBe(context);
+    });
+    normalize.bind(context).number(value);
+    expect(value).toHaveBeenCalled();
     done();
   });
 });
@@ -250,6 +281,16 @@ describe('normalize.string', function() {
     expect(result).toEqual(null);
     done();
   });
+
+  it('calls the string function with context, if bound', function(done) {
+    var context = {};
+    var value = expect.createSpy().andCall(function() {
+      expect(this).toBe(context);
+    });
+    normalize.bind(context).string(value);
+    expect(value).toHaveBeenCalled();
+    done();
+  });
 });
 
 describe('normalize.symbol', function() {
@@ -278,6 +319,21 @@ describe('normalize.symbol', function() {
     expect(result).toEqual(null);
     done();
   });
+
+  it('calls the symbol function with context, if bound', function(done) {
+    if (!global.Symbol) {
+      console.log('Only available on platforms that support Symbol');
+      this.skip();
+      return;
+    }
+    var context = {};
+    var value = expect.createSpy().andCall(function() {
+      expect(this).toBe(context);
+    });
+    normalize.bind(context).symbol(value);
+    expect(value).toHaveBeenCalled();
+    done();
+  });
 });
 
 describe('normalize.boolean', function() {
@@ -301,6 +357,16 @@ describe('normalize.boolean', function() {
     var value = 'invalid';
     var result = normalize.boolean(value);
     expect(result).toEqual(null);
+    done();
+  });
+
+  it('calls the boolean function with context, if bound', function(done) {
+    var context = {};
+    var value = expect.createSpy().andCall(function() {
+      expect(this).toBe(context);
+    });
+    normalize.bind(context).boolean(value);
+    expect(value).toHaveBeenCalled();
     done();
   });
 });
@@ -343,6 +409,16 @@ describe('normalize.undefined', function() {
     var value = 'invalid';
     var result = normalize.undefined(value);
     expect(result).toEqual(null);
+    done();
+  });
+
+  it('calls the undefined function with context, if bound', function(done) {
+    var context = {};
+    var value = expect.createSpy().andCall(function() {
+      expect(this).toBe(context);
+    });
+    normalize.bind(context).undefined(value);
+    expect(value).toHaveBeenCalled();
     done();
   });
 });
@@ -411,6 +487,16 @@ describe('normalize.date', function() {
     var value = 'invalid';
     var result = normalize.date(value);
     expect(result).toEqual(null);
+    done();
+  });
+
+  it('calls the date function with context, if bound', function(done) {
+    var context = {};
+    var value = expect.createSpy().andCall(function() {
+      expect(this).toBe(context);
+    });
+    normalize.bind(context).date(value);
+    expect(value).toHaveBeenCalled();
     done();
   });
 });

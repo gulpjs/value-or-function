@@ -18,7 +18,7 @@ function normalize(coercer, value) {
     if (coercer === 'function') {
       return value;
     }
-    value = value.apply(null, Array.prototype.slice.call(arguments, 2));
+    value = value.apply(this, Array.prototype.slice.call(arguments, 2));
   }
   return coerce(coercer, value);
 }
@@ -99,10 +99,17 @@ function primitive(value) {
 }
 
 
-// Add methods for each type
-types.forEach(function(type) {
-  normalize[type] = normalize.bind(null, type);
-});
+function bind(context) {
+  var fun = Function.prototype.bind.call(normalize, context);
+  fun.bind = bind;
+
+  // Add methods for each type
+  types.forEach(function(type) {
+    fun[type] = Function.prototype.bind.call(normalize, context, type);
+  });
+
+  return fun;
+}
 
 
-module.exports = normalize;
+module.exports = bind(null);

@@ -35,6 +35,13 @@ var count = normalize('number', function(a, b) {
 }, 1, 2);
 // count === 3
 
+// Bind the function to supply it with context
+var context = { c: 3 };
+var count = normalize.bind(context)('number', function(a, b) {
+  return a + b + this.c;
+}, 1, 2);
+// count === 6
+
 // Values one of multiple types are returned
 var isEnabled = normalize(['string', 'boolean'], true);
 // isEnabled === true
