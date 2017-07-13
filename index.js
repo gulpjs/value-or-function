@@ -20,11 +20,11 @@ function normalize(coercer, value) {
     }
     value = value.apply(this, Array.prototype.slice.call(arguments, 2));
   }
-  return coerce(coercer, value);
+  return coerce(this, coercer, value);
 }
 
 
-function coerce(coercer, value) {
+function coerce(context, coercer, value) {
 
   // Handle built-in types
   if (typeof coercer === 'string') {
@@ -36,13 +36,13 @@ function coerce(coercer, value) {
 
   // Handle custom coercer
   if (typeof coercer === 'function') {
-    return coercer(value);
+    return coercer.call(context, value);
   }
 
   // Array of coercers, try in order until one returns a non-null value
   var result = null;
   coercer.some(function(coercer) {
-    result = coerce(coercer, value);
+    result = coerce(context, coercer, value);
     return result !== null;
   });
 

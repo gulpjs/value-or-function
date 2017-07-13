@@ -46,22 +46,35 @@ describe('normalize', function() {
     done();
   });
 
-  it('supports functions for the type parameter', function(done) {
+  it('supports coercer functions for the type parameter', function(done) {
     var type = function() {
       return true;
     };
     var value = 1;
     var result = normalize(type, value);
-    expect(result).toEqual(value);
+    expect(result).toBe(true);
     done();
   });
 
-  it('calls the type function to attempt coercion', function(done) {
+  it('calls the coercer function to attempt coercion', function(done) {
     var expected = 1;
     var type = expect.createSpy().andCall(function(value) {
       return value;
     });
     var result = normalize(type, expected);
+    expect(result).toEqual(expected);
+    expect(type).toHaveBeenCalled();
+    done();
+  });
+
+  it('calls the coercer functions with context, if bound', function(done) {
+    var expected = 1;
+    var context = {};
+    var type = expect.createSpy().andCall(function(value) {
+      expect(this).toBe(context);
+      return value;
+    });
+    var result = normalize.bind(context)(type, expected);
     expect(result).toEqual(expected);
     expect(type).toHaveBeenCalled();
     done();
