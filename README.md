@@ -19,9 +19,9 @@ var normalize = require('value-or-function');
 var isEnabled = normalize('boolean', true);
 // isEnabled === true
 
-// Values not matching type return null
+// Values not matching type return undefined
 var isEnabled = normalize('boolean', 1);
-// isEnabled === null
+// isEnabled === undefined
 
 // Functions are called
 var isEnabled = normalize('boolean', function() {
@@ -49,7 +49,9 @@ var isEnabled = normalize(['string', 'boolean'], true);
 // Provide a function as first argument to do custom coercion
 var now = new Date();
 var enabledSince = normalize(function(value) {
-  return value.constructor === Date ? value : null;
+  if (value.constructor === Date) {
+    return value;
+  }
 }, now);
 // enabledSince === now
 
@@ -60,7 +62,6 @@ var result = normalize.string('');
 var result = normalize.symbol(Symbol());
 var result = normalize.boolean(true);
 var result = normalize.function(function() {});
-var result = normalize.undefined(undefined);
 var result = normalize.date(new Date());
 ```
 
@@ -71,7 +72,7 @@ var result = normalize.date(new Date());
 Takes a coercer function `coercer` to transform `value` to the desired type.
 Also optionally takes any extra arguments to apply to `value` if `value` is a function.
 
-If the return value of `coercer(value)` is not `null`, that value is returned.
+If the return value of `coercer(value)` is not `null` or `undefined`, that value is returned.
 Otherwise, if `value` is a function, that function is called with any extra arguments
 supplied to `normalize`, and its return value is passed through the coercer.
 
@@ -80,7 +81,7 @@ and the appropriate default coercer is invoked, optionally first reducing `value
 to a primitive type with `.valueOf()` if it is an Object.
 
 If `coercer` is an array, each element is tried until one returns something other
-than `null`, or it results in `null` if all of the elements yield `null`.
+than `null` or `undefined`, or it results in `undefined` if all of the elements yield `null` or `undefined`.
 
 #### `normalize.object(value[, ...appliedArguments])`
 
@@ -105,10 +106,6 @@ Convenience method for `normalize('boolean', ...)`.
 #### `normalize.function(value[, ...appliedArguments])`
 
 Convenience method for `normalize('function', ...)`.
-
-#### `normalize.undefined(value[, ...appliedArguments])`
-
-Convenience method for `normalize('undefined', ...)`.
 
 #### `normalize.date(value[, ...appliedArguments])`
 
