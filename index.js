@@ -9,7 +9,6 @@ var types = [
   'boolean',
   'date',
   'function', // Weird to expose this
-  'undefined', // And this?
 ];
 
 
@@ -40,10 +39,10 @@ function coerce(ctx, coercer, value) {
   }
 
   // Array of coercers, try in order until one returns a non-null value
-  var result = null;
+  var result;
   coercer.some(function(coercer) {
     result = coerce(ctx, coercer, value);
-    return result !== null;
+    return result != null;
   });
 
   return result;
@@ -76,7 +75,6 @@ coerce.date = function(value) {
   if (typeof value === 'number' && !isNaN(value) && isFinite(value)) {
     return new Date(value);
   }
-  return null;
 };
 
 
@@ -84,7 +82,6 @@ function typeOf(type, value) {
   if (typeof value === type) {
     return value;
   }
-  return null;
 }
 
 
