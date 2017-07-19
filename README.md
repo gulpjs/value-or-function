@@ -35,9 +35,9 @@ var count = normalize('number', function(a, b) {
 }, 1, 2);
 // count === 3
 
-// Bind the function to supply it with context
+// Supply the function with context
 var context = { c: 3 };
-var count = normalize.bind(context)('number', function(a, b) {
+var count = normalize.call(context, 'number', function(a, b) {
   return a + b + this.c;
 }, 1, 2);
 // count === 6
