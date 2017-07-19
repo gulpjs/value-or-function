@@ -18,31 +18,31 @@ function normalize(coercer, value) {
     if (coercer === 'function') {
       return value;
     }
-    value = value.apply(this, Array.prototype.slice.call(arguments, 2));
+    value = value.apply(this, slice(arguments, 2));
   }
   return coerce(this, coercer, value);
 }
 
 
-function coerce(context, coercer, value) {
+function coerce(ctx, coercer, value) {
 
   // Handle built-in types
   if (typeof coercer === 'string') {
     if (coerce[coercer]) {
-      return coerce[coercer](value);
+      return coerce[coercer].call(ctx, value);
     }
     return typeOf(coercer, value);
   }
 
   // Handle custom coercer
   if (typeof coercer === 'function') {
-    return coercer.call(context, value);
+    return coercer.call(ctx, value);
   }
 
   // Array of coercers, try in order until one returns a non-null value
   var result = null;
   coercer.some(function(coercer) {
-    result = coerce(context, coercer, value);
+    result = coerce(ctx, coercer, value);
     return result !== null;
   });
 
@@ -98,18 +98,19 @@ function primitive(value) {
   return value;
 }
 
-
-function bind(context) {
-  var fun = Function.prototype.bind.call(normalize, context);
-  fun.bind = bind;
-
-  // Add methods for each type
-  types.forEach(function(type) {
-    fun[type] = Function.prototype.bind.call(normalize, context, type);
-  });
-
-  return fun;
+function slice(value, from) {
+  return Array.prototype.slice.call(value, from);
 }
 
+// Add methods for each type
+types.forEach(function(type) {
+  // Make it an array for easier concat
+  var typeArg = [type];
 
-module.exports = bind(null);
+  normalize[type] = function() {
+    var args = slice(arguments);
+    return normalize.apply(this, typeArg.concat(args));
+  };
+});
+
+module.exports = normalize;

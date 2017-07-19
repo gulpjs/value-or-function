@@ -74,7 +74,7 @@ describe('normalize', function() {
       expect(this).toBe(context);
       return value;
     });
-    var result = normalize.bind(context)(type, expected);
+    var result = normalize.call(context, type, expected);
     expect(result).toEqual(expected);
     expect(type).toHaveBeenCalled();
     done();
@@ -98,7 +98,7 @@ describe('normalize', function() {
     var value = expect.createSpy().andCall(function() {
       expect(this).toBe(context);
     });
-    normalize.bind(context)(type, value);
+    normalize.call(context, type, value);
     expect(value).toHaveBeenCalled();
     done();
   });
@@ -193,7 +193,7 @@ describe('normalize.object', function() {
     var value = expect.createSpy().andCall(function() {
       expect(this).toBe(context);
     });
-    normalize.bind(context).object(value);
+    normalize.object.call(context, value);
     expect(value).toHaveBeenCalled();
     done();
   });
@@ -242,7 +242,7 @@ describe('normalize.number', function() {
     var value = expect.createSpy().andCall(function() {
       expect(this).toBe(context);
     });
-    normalize.bind(context).number(value);
+    normalize.number.call(context, value);
     expect(value).toHaveBeenCalled();
     done();
   });
@@ -300,7 +300,7 @@ describe('normalize.string', function() {
     var value = expect.createSpy().andCall(function() {
       expect(this).toBe(context);
     });
-    normalize.bind(context).string(value);
+    normalize.string.call(context, value);
     expect(value).toHaveBeenCalled();
     done();
   });
@@ -343,7 +343,7 @@ describe('normalize.symbol', function() {
     var value = expect.createSpy().andCall(function() {
       expect(this).toBe(context);
     });
-    normalize.bind(context).symbol(value);
+    normalize.symbol.call(context, value);
     expect(value).toHaveBeenCalled();
     done();
   });
@@ -378,7 +378,7 @@ describe('normalize.boolean', function() {
     var value = expect.createSpy().andCall(function() {
       expect(this).toBe(context);
     });
-    normalize.bind(context).boolean(value);
+    normalize.boolean.call(context, value);
     expect(value).toHaveBeenCalled();
     done();
   });
@@ -430,7 +430,7 @@ describe('normalize.undefined', function() {
     var value = expect.createSpy().andCall(function() {
       expect(this).toBe(context);
     });
-    normalize.bind(context).undefined(value);
+    normalize.undefined.call(context, value);
     expect(value).toHaveBeenCalled();
     done();
   });
@@ -508,7 +508,7 @@ describe('normalize.date', function() {
     var value = expect.createSpy().andCall(function() {
       expect(this).toBe(context);
     });
-    normalize.bind(context).date(value);
+    normalize.date.call(context, value);
     expect(value).toHaveBeenCalled();
     done();
   });
