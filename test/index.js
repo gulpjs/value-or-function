@@ -46,22 +46,35 @@ describe('normalize', function() {
     done();
   });
 
-  it('supports functions for the type parameter', function(done) {
+  it('supports coercer functions for the type parameter', function(done) {
     var type = function() {
       return true;
     };
     var value = 1;
     var result = normalize(type, value);
-    expect(result).toEqual(value);
+    expect(result).toBe(true);
     done();
   });
 
-  it('calls the type function to attempt coercion', function(done) {
+  it('calls the coercer function to attempt coercion', function(done) {
     var expected = 1;
     var type = expect.createSpy().andCall(function(value) {
       return value;
     });
     var result = normalize(type, expected);
+    expect(result).toEqual(expected);
+    expect(type).toHaveBeenCalled();
+    done();
+  });
+
+  it('calls the coercer functions with context, if bound', function(done) {
+    var expected = 1;
+    var context = {};
+    var type = expect.createSpy().andCall(function(value) {
+      expect(this).toBe(context);
+      return value;
+    });
+    var result = normalize.call(context, type, expected);
     expect(result).toEqual(expected);
     expect(type).toHaveBeenCalled();
     done();
@@ -75,6 +88,17 @@ describe('normalize', function() {
     });
     var result = normalize(type, value);
     expect(result).toEqual(expected);
+    expect(value).toHaveBeenCalled();
+    done();
+  });
+
+  it('calls the value function with context, if bound', function(done) {
+    var type = 'string';
+    var context = {};
+    var value = expect.createSpy().andCall(function() {
+      expect(this).toBe(context);
+    });
+    normalize.call(context, type, value);
     expect(value).toHaveBeenCalled();
     done();
   });
@@ -163,6 +187,16 @@ describe('normalize.object', function() {
     expect(result).toEqual(null);
     done();
   });
+
+  it('calls the object function with context, if bound', function(done) {
+    var context = {};
+    var value = expect.createSpy().andCall(function() {
+      expect(this).toBe(context);
+    });
+    normalize.object.call(context, value);
+    expect(value).toHaveBeenCalled();
+    done();
+  });
 });
 
 describe('normalize.number', function() {
@@ -200,6 +234,16 @@ describe('normalize.number', function() {
     var value = 'invalid';
     var result = normalize.number(value);
     expect(result).toEqual(null);
+    done();
+  });
+
+  it('calls the number function with context, if bound', function(done) {
+    var context = {};
+    var value = expect.createSpy().andCall(function() {
+      expect(this).toBe(context);
+    });
+    normalize.number.call(context, value);
+    expect(value).toHaveBeenCalled();
     done();
   });
 });
@@ -250,6 +294,16 @@ describe('normalize.string', function() {
     expect(result).toEqual(null);
     done();
   });
+
+  it('calls the string function with context, if bound', function(done) {
+    var context = {};
+    var value = expect.createSpy().andCall(function() {
+      expect(this).toBe(context);
+    });
+    normalize.string.call(context, value);
+    expect(value).toHaveBeenCalled();
+    done();
+  });
 });
 
 describe('normalize.symbol', function() {
@@ -278,6 +332,21 @@ describe('normalize.symbol', function() {
     expect(result).toEqual(null);
     done();
   });
+
+  it('calls the symbol function with context, if bound', function(done) {
+    if (!global.Symbol) {
+      console.log('Only available on platforms that support Symbol');
+      this.skip();
+      return;
+    }
+    var context = {};
+    var value = expect.createSpy().andCall(function() {
+      expect(this).toBe(context);
+    });
+    normalize.symbol.call(context, value);
+    expect(value).toHaveBeenCalled();
+    done();
+  });
 });
 
 describe('normalize.boolean', function() {
@@ -301,6 +370,16 @@ describe('normalize.boolean', function() {
     var value = 'invalid';
     var result = normalize.boolean(value);
     expect(result).toEqual(null);
+    done();
+  });
+
+  it('calls the boolean function with context, if bound', function(done) {
+    var context = {};
+    var value = expect.createSpy().andCall(function() {
+      expect(this).toBe(context);
+    });
+    normalize.boolean.call(context, value);
+    expect(value).toHaveBeenCalled();
     done();
   });
 });
@@ -343,6 +422,16 @@ describe('normalize.undefined', function() {
     var value = 'invalid';
     var result = normalize.undefined(value);
     expect(result).toEqual(null);
+    done();
+  });
+
+  it('calls the undefined function with context, if bound', function(done) {
+    var context = {};
+    var value = expect.createSpy().andCall(function() {
+      expect(this).toBe(context);
+    });
+    normalize.undefined.call(context, value);
+    expect(value).toHaveBeenCalled();
     done();
   });
 });
@@ -411,6 +500,16 @@ describe('normalize.date', function() {
     var value = 'invalid';
     var result = normalize.date(value);
     expect(result).toEqual(null);
+    done();
+  });
+
+  it('calls the date function with context, if bound', function(done) {
+    var context = {};
+    var value = expect.createSpy().andCall(function() {
+      expect(this).toBe(context);
+    });
+    normalize.date.call(context, value);
+    expect(value).toHaveBeenCalled();
     done();
   });
 });
