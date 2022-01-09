@@ -1,6 +1,7 @@
 'use strict';
 
 var expect = require('expect');
+var sinon = require('sinon');
 
 var normalize = require('../');
 
@@ -58,100 +59,100 @@ describe('normalize', function() {
 
   it('calls the coercer function to attempt coercion', function(done) {
     var expected = 1;
-    var type = expect.createSpy().andCall(function(value) {
+    var type = sinon.fake(function(value) {
       return value;
     });
     var result = normalize(type, expected);
     expect(result).toBe(expected);
-    expect(type).toHaveBeenCalled();
+    expect(type.calledOnce).toBeTruthy();
     done();
   });
 
   it('calls the coercer functions with context, if bound', function(done) {
     var expected = 1;
     var context = {};
-    var type = expect.createSpy().andCall(function(value) {
+    var type = sinon.fake(function(value) {
       expect(this).toBe(context);
       return value;
     });
     var result = normalize.call(context, type, expected);
     expect(result).toEqual(expected);
-    expect(type).toHaveBeenCalled();
+    expect(type.calledOnce).toBeTruthy();
     done();
   });
 
   it('calls the value if it is a function', function(done) {
     var type = 'string';
     var expected = 'test string';
-    var value = expect.createSpy().andCall(function() {
+    var value = sinon.fake(function() {
       return expected;
     });
     var result = normalize(type, value);
     expect(result).toBe(expected);
-    expect(value).toHaveBeenCalled();
+    expect(value.calledOnce).toBeTruthy();
     done();
   });
 
   it('calls the value function with context, if bound', function(done) {
     var type = 'string';
     var context = {};
-    var value = expect.createSpy().andCall(function() {
+    var value = sinon.fake(function() {
       expect(this).toBe(context);
     });
     normalize.call(context, type, value);
-    expect(value).toHaveBeenCalled();
+    expect(value.calledOnce).toBeTruthy();
     done();
   });
 
   it('checks the result of function against coercer', function(done) {
     var expected = 'test string';
-    var coercer = expect.createSpy().andCall(function(value) {
+    var coercer = sinon.fake(function(value) {
       return (typeof value === 'string') ? value : undefined;
     });
-    var value = expect.createSpy().andCall(function() {
+    var value = sinon.fake(function() {
       return expected;
     });
     var result = normalize(coercer, value);
     expect(result).toBe(expected);
-    expect(coercer).toHaveBeenCalled();
-    expect(value).toHaveBeenCalled();
+    expect(coercer.calledOnce).toBeTruthy();
+    expect(value.calledOnce).toBeTruthy();
     done();
   });
 
   it('calls the function, passing extra arguments', function(done) {
     var type = 'string';
     var expected = 'test string';
-    var value = expect.createSpy().andCall(function(arg) {
+    var value = sinon.fake(function(arg) {
       return arg;
     });
     var result = normalize(type, value, expected);
     expect(result).toBe(expected);
-    expect(value).toHaveBeenCalled();
+    expect(value.calledOnce).toBeTruthy();
     done();
   });
 
   it('returns null if result of function does not match type', function(done) {
     var type = 'string';
-    var value = expect.createSpy().andCall(function() {
+    var value = sinon.fake(function() {
       return 123;
     });
     var result = normalize(type, value);
     expect(result).toBe(undefined);
-    expect(value).toHaveBeenCalled();
+    expect(value.calledOnce).toBeTruthy();
     done();
   });
 
   it('rejects if function return val doesn\'t satisfy custom coercer', function(done) {
-    var coercer = expect.createSpy().andCall(function(value) {
+    var coercer = sinon.fake(function(value) {
       return (typeof value === 'string') ? value : undefined;
     });
-    var value = expect.createSpy().andCall(function() {
+    var value = sinon.fake(function() {
       return 123;
     });
     var result = normalize(coercer, value);
     expect(result).toBe(undefined);
-    expect(coercer).toHaveBeenCalled();
-    expect(value).toHaveBeenCalled();
+    expect(coercer.calledOnce).toBeTruthy();
+    expect(value.calledOnce).toBeTruthy();
     done();
   });
 });
@@ -190,11 +191,11 @@ describe('normalize.object', function() {
 
   it('calls the object function with context, if bound', function(done) {
     var context = {};
-    var value = expect.createSpy().andCall(function() {
+    var value = sinon.fake(function() {
       expect(this).toBe(context);
     });
     normalize.object.call(context, value);
-    expect(value).toHaveBeenCalled();
+    expect(value.calledOnce).toBeTruthy();
     done();
   });
 });
@@ -239,11 +240,11 @@ describe('normalize.number', function() {
 
   it('calls the number function with context, if bound', function(done) {
     var context = {};
-    var value = expect.createSpy().andCall(function() {
+    var value = sinon.fake(function() {
       expect(this).toBe(context);
     });
     normalize.number.call(context, value);
-    expect(value).toHaveBeenCalled();
+    expect(value.calledOnce).toBeTruthy();
     done();
   });
 });
@@ -297,11 +298,11 @@ describe('normalize.string', function() {
 
   it('calls the string function with context, if bound', function(done) {
     var context = {};
-    var value = expect.createSpy().andCall(function() {
+    var value = sinon.fake(function() {
       expect(this).toBe(context);
     });
     normalize.string.call(context, value);
-    expect(value).toHaveBeenCalled();
+    expect(value.calledOnce).toBeTruthy();
     done();
   });
 });
@@ -309,12 +310,6 @@ describe('normalize.string', function() {
 describe('normalize.symbol', function() {
 
   it('compares value to typeof symbol', function(done) {
-    if (!global.Symbol) {
-      console.log('Only available on platforms that support Symbol');
-      this.skip();
-      return;
-    }
-
     var value = Symbol();
     var result = normalize.symbol(value);
     expect(result).toBe(value);
@@ -322,11 +317,6 @@ describe('normalize.symbol', function() {
   });
 
   it('rejects values that are not Symbol', function(done) {
-    if (!global.Symbol) {
-      console.log('Only available on platforms that support Symbol');
-      this.skip();
-      return;
-    }
     var value = 'invalid';
     var result = normalize.symbol(value);
     expect(result).toBe(undefined);
@@ -334,17 +324,12 @@ describe('normalize.symbol', function() {
   });
 
   it('calls the symbol function with context, if bound', function(done) {
-    if (!global.Symbol) {
-      console.log('Only available on platforms that support Symbol');
-      this.skip();
-      return;
-    }
     var context = {};
-    var value = expect.createSpy().andCall(function() {
+    var value = sinon.fake(function() {
       expect(this).toBe(context);
     });
     normalize.symbol.call(context, value);
-    expect(value).toHaveBeenCalled();
+    expect(value.calledOnce).toBeTruthy();
     done();
   });
 });
@@ -375,11 +360,11 @@ describe('normalize.boolean', function() {
 
   it('calls the boolean function with context, if bound', function(done) {
     var context = {};
-    var value = expect.createSpy().andCall(function() {
+    var value = sinon.fake(function() {
       expect(this).toBe(context);
     });
     normalize.boolean.call(context, value);
-    expect(value).toHaveBeenCalled();
+    expect(value.calledOnce).toBeTruthy();
     done();
   });
 });
@@ -394,10 +379,10 @@ describe('normalize.function', function() {
   });
 
   it('never calls the function', function(done) {
-    var value = expect.createSpy();
+    var value = sinon.spy();
     var result = normalize.function(value);
     expect(result).toBe(value);
-    expect(value).toNotHaveBeenCalled();
+    expect(value.notCalled).toBeTruthy();
     done();
   });
 
@@ -478,11 +463,11 @@ describe('normalize.date', function() {
 
   it('calls the date function with context, if bound', function(done) {
     var context = {};
-    var value = expect.createSpy().andCall(function() {
+    var value = sinon.fake(function() {
       expect(this).toBe(context);
     });
     normalize.date.call(context, value);
-    expect(value).toHaveBeenCalled();
+    expect(value.calledOnce).toBeTruthy();
     done();
   });
 });
