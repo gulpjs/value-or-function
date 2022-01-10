@@ -5,9 +5,8 @@ var sinon = require('sinon');
 
 var normalize = require('../');
 
-describe('normalize', function() {
-
-  it('compares a type and the type of a value', function(done) {
+describe('normalize', function () {
+  it('compares a type and the type of a value', function (done) {
     var type = 'string';
     var value = 'test string';
     var result = normalize(type, value);
@@ -15,7 +14,7 @@ describe('normalize', function() {
     done();
   });
 
-  it('returns undefined if value does not match type', function(done) {
+  it('returns undefined if value does not match type', function (done) {
     var type = 'string';
     var value = 1;
     var result = normalize(type, value);
@@ -23,7 +22,7 @@ describe('normalize', function() {
     done();
   });
 
-  it('supports arrays for the type parameter', function(done) {
+  it('supports arrays for the type parameter', function (done) {
     var type = ['string'];
     var value = 'test string';
     var result = normalize(type, value);
@@ -31,7 +30,7 @@ describe('normalize', function() {
     done();
   });
 
-  it('compares each type and the type of the value', function(done) {
+  it('compares each type and the type of the value', function (done) {
     var type = ['number', 'string', 'object'];
     var value = 'test string';
     var result = normalize(type, value);
@@ -39,7 +38,7 @@ describe('normalize', function() {
     done();
   });
 
-  it('returns undefined if value does not match any type', function(done) {
+  it('returns undefined if value does not match any type', function (done) {
     var type = ['string', 'undefined'];
     var value = 1;
     var result = normalize(type, value);
@@ -47,8 +46,8 @@ describe('normalize', function() {
     done();
   });
 
-  it('supports coercer functions for the type parameter', function(done) {
-    var type = function() {
+  it('supports coercer functions for the type parameter', function (done) {
+    var type = function () {
       return true;
     };
     var value = 1;
@@ -57,9 +56,9 @@ describe('normalize', function() {
     done();
   });
 
-  it('calls the coercer function to attempt coercion', function(done) {
+  it('calls the coercer function to attempt coercion', function (done) {
     var expected = 1;
-    var type = sinon.fake(function(value) {
+    var type = sinon.fake(function (value) {
       return value;
     });
     var result = normalize(type, expected);
@@ -68,10 +67,10 @@ describe('normalize', function() {
     done();
   });
 
-  it('calls the coercer functions with context, if bound', function(done) {
+  it('calls the coercer functions with context, if bound', function (done) {
     var expected = 1;
     var context = {};
-    var type = sinon.fake(function(value) {
+    var type = sinon.fake(function (value) {
       expect(this).toBe(context);
       return value;
     });
@@ -81,10 +80,10 @@ describe('normalize', function() {
     done();
   });
 
-  it('calls the value if it is a function', function(done) {
+  it('calls the value if it is a function', function (done) {
     var type = 'string';
     var expected = 'test string';
-    var value = sinon.fake(function() {
+    var value = sinon.fake(function () {
       return expected;
     });
     var result = normalize(type, value);
@@ -93,10 +92,10 @@ describe('normalize', function() {
     done();
   });
 
-  it('calls the value function with context, if bound', function(done) {
+  it('calls the value function with context, if bound', function (done) {
     var type = 'string';
     var context = {};
-    var value = sinon.fake(function() {
+    var value = sinon.fake(function () {
       expect(this).toBe(context);
     });
     normalize.call(context, type, value);
@@ -104,12 +103,12 @@ describe('normalize', function() {
     done();
   });
 
-  it('checks the result of function against coercer', function(done) {
+  it('checks the result of function against coercer', function (done) {
     var expected = 'test string';
-    var coercer = sinon.fake(function(value) {
-      return (typeof value === 'string') ? value : undefined;
+    var coercer = sinon.fake(function (value) {
+      return typeof value === 'string' ? value : undefined;
     });
-    var value = sinon.fake(function() {
+    var value = sinon.fake(function () {
       return expected;
     });
     var result = normalize(coercer, value);
@@ -119,10 +118,10 @@ describe('normalize', function() {
     done();
   });
 
-  it('calls the function, passing extra arguments', function(done) {
+  it('calls the function, passing extra arguments', function (done) {
     var type = 'string';
     var expected = 'test string';
-    var value = sinon.fake(function(arg) {
+    var value = sinon.fake(function (arg) {
       return arg;
     });
     var result = normalize(type, value, expected);
@@ -131,9 +130,9 @@ describe('normalize', function() {
     done();
   });
 
-  it('returns null if result of function does not match type', function(done) {
+  it('returns null if result of function does not match type', function (done) {
     var type = 'string';
-    var value = sinon.fake(function() {
+    var value = sinon.fake(function () {
       return 123;
     });
     var result = normalize(type, value);
@@ -142,11 +141,11 @@ describe('normalize', function() {
     done();
   });
 
-  it('rejects if function return val doesn\'t satisfy custom coercer', function(done) {
-    var coercer = sinon.fake(function(value) {
-      return (typeof value === 'string') ? value : undefined;
+  it("rejects if function return val doesn't satisfy custom coercer", function (done) {
+    var coercer = sinon.fake(function (value) {
+      return typeof value === 'string' ? value : undefined;
     });
-    var value = sinon.fake(function() {
+    var value = sinon.fake(function () {
       return 123;
     });
     var result = normalize(coercer, value);
@@ -157,9 +156,8 @@ describe('normalize', function() {
   });
 });
 
-describe('normalize.object', function() {
-
-  it('compares value to typeof object', function(done) {
+describe('normalize.object', function () {
+  it('compares value to typeof object', function (done) {
     var obj = {};
     var arr = [];
     var numObj = new Number(1);
@@ -175,23 +173,23 @@ describe('normalize.object', function() {
     done();
   });
 
-  it('accpets value if it is null', function(done) {
+  it('accpets value if it is null', function (done) {
     var value = null;
     var result = normalize.object(value);
     expect(result).toBe(null);
     done();
   });
 
-  it('rejects values if not Object', function(done) {
+  it('rejects values if not Object', function (done) {
     var value = 'invalid';
     var result = normalize.object(value);
     expect(result).toBe(undefined);
     done();
   });
 
-  it('calls the object function with context, if bound', function(done) {
+  it('calls the object function with context, if bound', function (done) {
     var context = {};
-    var value = sinon.fake(function() {
+    var value = sinon.fake(function () {
       expect(this).toBe(context);
     });
     normalize.object.call(context, value);
@@ -200,30 +198,29 @@ describe('normalize.object', function() {
   });
 });
 
-describe('normalize.number', function() {
-
-  it('accepts value if typeof number', function(done) {
+describe('normalize.number', function () {
+  it('accepts value if typeof number', function (done) {
     var value = 1;
     var result = normalize.number(value);
     expect(result).toBe(value);
     done();
   });
 
-  it('accepts value if it is not-a-number', function(done) {
+  it('accepts value if it is not-a-number', function (done) {
     var value = Number.NaN;
     var result = normalize.number(value);
     expect(Number.isNaN(result)).toBe(true);
     done();
   });
 
-  it('accepts value if it is infinite', function(done) {
+  it('accepts value if it is infinite', function (done) {
     var value = Number.NEGATIVE_INFINITY;
     var result = normalize.number(value);
     expect(result).toBe(value);
     done();
   });
 
-  it('accepts value if instanceof Number', function(done) {
+  it('accepts value if instanceof Number', function (done) {
     var expected = 1;
     var value = new Number(expected);
     var result = normalize.number(value);
@@ -231,16 +228,16 @@ describe('normalize.number', function() {
     done();
   });
 
-  it('rejects values that won\'t coerce to number', function(done) {
+  it("rejects values that won't coerce to number", function (done) {
     var value = 'invalid';
     var result = normalize.number(value);
     expect(result).toBe(undefined);
     done();
   });
 
-  it('calls the number function with context, if bound', function(done) {
+  it('calls the number function with context, if bound', function (done) {
     var context = {};
-    var value = sinon.fake(function() {
+    var value = sinon.fake(function () {
       expect(this).toBe(context);
     });
     normalize.number.call(context, value);
@@ -249,16 +246,15 @@ describe('normalize.number', function() {
   });
 });
 
-describe('normalize.string', function() {
-
-  it('accepts value if typeof string', function(done) {
+describe('normalize.string', function () {
+  it('accepts value if typeof string', function (done) {
     var value = 'test string';
     var result = normalize.string(value);
     expect(result).toBe(value);
     done();
   });
 
-  it('accepts value if instanceof String', function(done) {
+  it('accepts value if instanceof String', function (done) {
     var expected = 'test string';
     var value = new String(expected);
     var result = normalize.string(value);
@@ -266,10 +262,10 @@ describe('normalize.string', function() {
     done();
   });
 
-  it('accepts value if it is an Object', function(done) {
+  it('accepts value if it is an Object', function (done) {
     var expected = 'test string';
     var value = {
-      toString: function() {
+      toString: function () {
         return expected;
       },
     };
@@ -278,9 +274,9 @@ describe('normalize.string', function() {
     done();
   });
 
-  it('rejects Object if its toString doesn\'t return string', function(done) {
+  it("rejects Object if its toString doesn't return string", function (done) {
     var value = {
-      toString: function() {
+      toString: function () {
         return {};
       },
     };
@@ -289,16 +285,16 @@ describe('normalize.string', function() {
     done();
   });
 
-  it('rejects values that won\'t coerce to string', function(done) {
+  it("rejects values that won't coerce to string", function (done) {
     var value = undefined;
     var result = normalize.string(value);
     expect(result).toBe(undefined);
     done();
   });
 
-  it('calls the string function with context, if bound', function(done) {
+  it('calls the string function with context, if bound', function (done) {
     var context = {};
-    var value = sinon.fake(function() {
+    var value = sinon.fake(function () {
       expect(this).toBe(context);
     });
     normalize.string.call(context, value);
@@ -307,25 +303,24 @@ describe('normalize.string', function() {
   });
 });
 
-describe('normalize.symbol', function() {
-
-  it('compares value to typeof symbol', function(done) {
+describe('normalize.symbol', function () {
+  it('compares value to typeof symbol', function (done) {
     var value = Symbol();
     var result = normalize.symbol(value);
     expect(result).toBe(value);
     done();
   });
 
-  it('rejects values that are not Symbol', function(done) {
+  it('rejects values that are not Symbol', function (done) {
     var value = 'invalid';
     var result = normalize.symbol(value);
     expect(result).toBe(undefined);
     done();
   });
 
-  it('calls the symbol function with context, if bound', function(done) {
+  it('calls the symbol function with context, if bound', function (done) {
     var context = {};
-    var value = sinon.fake(function() {
+    var value = sinon.fake(function () {
       expect(this).toBe(context);
     });
     normalize.symbol.call(context, value);
@@ -334,16 +329,15 @@ describe('normalize.symbol', function() {
   });
 });
 
-describe('normalize.boolean', function() {
-
-  it('accepts value if typeof boolean', function(done) {
+describe('normalize.boolean', function () {
+  it('accepts value if typeof boolean', function (done) {
     var value = true;
     var result = normalize.boolean(value);
     expect(result).toBe(value);
     done();
   });
 
-  it('accepts value if instanceof Boolean', function(done) {
+  it('accepts value if instanceof Boolean', function (done) {
     var expected = true;
     var value = new Boolean(expected);
     var result = normalize.boolean(value);
@@ -351,16 +345,16 @@ describe('normalize.boolean', function() {
     done();
   });
 
-  it('rejects values that won\'t coerce to boolean', function(done) {
+  it("rejects values that won't coerce to boolean", function (done) {
     var value = 'invalid';
     var result = normalize.boolean(value);
     expect(result).toBe(undefined);
     done();
   });
 
-  it('calls the boolean function with context, if bound', function(done) {
+  it('calls the boolean function with context, if bound', function (done) {
     var context = {};
-    var value = sinon.fake(function() {
+    var value = sinon.fake(function () {
       expect(this).toBe(context);
     });
     normalize.boolean.call(context, value);
@@ -369,16 +363,15 @@ describe('normalize.boolean', function() {
   });
 });
 
-describe('normalize.function', function() {
-
-  it('accepts value if typeof function', function(done) {
-    var value = function() {};
+describe('normalize.function', function () {
+  it('accepts value if typeof function', function (done) {
+    var value = function () {};
     var result = normalize.function(value);
     expect(result).toBe(value);
     done();
   });
 
-  it('never calls the function', function(done) {
+  it('never calls the function', function (done) {
     var value = sinon.spy();
     var result = normalize.function(value);
     expect(result).toBe(value);
@@ -386,7 +379,7 @@ describe('normalize.function', function() {
     done();
   });
 
-  it('rejects values that won\'t coerce to function', function(done) {
+  it("rejects values that won't coerce to function", function (done) {
     var value = 'invalid';
     var result = normalize.function(value);
     expect(result).toBe(undefined);
@@ -394,9 +387,8 @@ describe('normalize.function', function() {
   });
 });
 
-describe('normalize.date', function() {
-
-  it('coerces a number to a Date object', function(done) {
+describe('normalize.date', function () {
+  it('coerces a number to a Date object', function (done) {
     var value = 1;
     var expected = new Date(value);
     var result = normalize.date(value);
@@ -404,21 +396,21 @@ describe('normalize.date', function() {
     done();
   });
 
-  it('rejects numbers with not-a-number values', function(done) {
+  it('rejects numbers with not-a-number values', function (done) {
     var value = Number.NaN;
     var result = normalize.date(value);
     expect(result).toBe(undefined);
     done();
   });
 
-  it('rejects numbers with infinite values', function(done) {
+  it('rejects numbers with infinite values', function (done) {
     var value = Number.POSITIVE_INFINITY;
     var result = normalize.date(value);
     expect(result).toBe(undefined);
     done();
   });
 
-  it('accepts objects that are Numbers', function(done) {
+  it('accepts objects that are Numbers', function (done) {
     var value = new Number(1);
     var expected = new Date(value);
     var result = normalize.date(value);
@@ -426,44 +418,44 @@ describe('normalize.date', function() {
     done();
   });
 
-  it('rejects Numbers with not-a-number values', function(done) {
+  it('rejects Numbers with not-a-number values', function (done) {
     var value = new Number(Number.NaN);
     var result = normalize.date(value);
     expect(result).toBe(undefined);
     done();
   });
 
-  it('rejects Numbers with infinite values', function(done) {
+  it('rejects Numbers with infinite values', function (done) {
     var value = new Number(Number.POSITIVE_INFINITY);
     var result = normalize.date(value);
     expect(result).toBe(undefined);
     done();
   });
 
-  it('accepts objects that are valid Dates', function(done) {
+  it('accepts objects that are valid Dates', function (done) {
     var value = new Date();
     var result = normalize.date(value);
     expect(result).toEqual(value);
     done();
   });
 
-  it('rejects Dates that are invalid', function(done) {
+  it('rejects Dates that are invalid', function (done) {
     var value = new Date(undefined);
     var result = normalize.date(value);
     expect(result).toBe(undefined);
     done();
   });
 
-  it('rejects object that are not dates', function(done) {
+  it('rejects object that are not dates', function (done) {
     var value = 'invalid';
     var result = normalize.date(value);
     expect(result).toBe(undefined);
     done();
   });
 
-  it('calls the date function with context, if bound', function(done) {
+  it('calls the date function with context, if bound', function (done) {
     var context = {};
-    var value = sinon.fake(function() {
+    var value = sinon.fake(function () {
       expect(this).toBe(context);
     });
     normalize.date.call(context, value);

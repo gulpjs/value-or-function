@@ -11,7 +11,6 @@ var types = [
   'function', // Weird to expose this
 ];
 
-
 function normalize(coercer, value) {
   if (typeof value === 'function') {
     if (coercer === 'function') {
@@ -22,9 +21,7 @@ function normalize(coercer, value) {
   return coerce(this, coercer, value);
 }
 
-
 function coerce(ctx, coercer, value) {
-
   // Handle built-in types
   if (typeof coercer === 'string') {
     if (coerce[coercer]) {
@@ -40,7 +37,7 @@ function coerce(ctx, coercer, value) {
 
   // Array of coercers, try in order until one returns a non-null value
   var result;
-  coercer.some(function(coercer) {
+  coercer.some(function (coercer) {
     result = coerce(ctx, coercer, value);
     return result != null;
   });
@@ -48,35 +45,31 @@ function coerce(ctx, coercer, value) {
   return result;
 }
 
-
-coerce.string = function(value) {
-  if (value != null &&
+coerce.string = function (value) {
+  if (
+    value != null &&
     typeof value === 'object' &&
-    typeof value.toString === 'function') {
-
+    typeof value.toString === 'function'
+  ) {
     value = value.toString();
   }
   return typeOf('string', primitive(value));
 };
 
-
-coerce.number = function(value) {
+coerce.number = function (value) {
   return typeOf('number', primitive(value));
 };
 
-
-coerce.boolean = function(value) {
+coerce.boolean = function (value) {
   return typeOf('boolean', primitive(value));
 };
 
-
-coerce.date = function(value) {
+coerce.date = function (value) {
   value = primitive(value);
   if (typeof value === 'number' && !isNaN(value) && isFinite(value)) {
     return new Date(value);
   }
 };
-
 
 function typeOf(type, value) {
   if (typeof value === type) {
@@ -84,12 +77,12 @@ function typeOf(type, value) {
   }
 }
 
-
 function primitive(value) {
-  if (value != null &&
+  if (
+    value != null &&
     typeof value === 'object' &&
-    typeof value.valueOf === 'function') {
-
+    typeof value.valueOf === 'function'
+  ) {
     value = value.valueOf();
   }
   return value;
@@ -100,11 +93,11 @@ function slice(value, from) {
 }
 
 // Add methods for each type
-types.forEach(function(type) {
+types.forEach(function (type) {
   // Make it an array for easier concat
   var typeArg = [type];
 
-  normalize[type] = function() {
+  normalize[type] = function () {
     var args = slice(arguments);
     return normalize.apply(this, typeArg.concat(args));
   };

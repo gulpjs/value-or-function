@@ -24,22 +24,33 @@ var isEnabled = normalize('boolean', 1);
 // isEnabled === undefined
 
 // Functions are called
-var isEnabled = normalize('boolean', function() {
+var isEnabled = normalize('boolean', function () {
   return false;
 });
 // isEnabled === false
 
 // Extra arguments are applied to function
-var count = normalize('number', function(a, b) {
-  return a + b;
-}, 1, 2);
+var count = normalize(
+  'number',
+  function (a, b) {
+    return a + b;
+  },
+  1,
+  2
+);
 // count === 3
 
 // Supply the function with context
 var context = { c: 3 };
-var count = normalize.call(context, 'number', function(a, b) {
-  return a + b + this.c;
-}, 1, 2);
+var count = normalize.call(
+  context,
+  'number',
+  function (a, b) {
+    return a + b + this.c;
+  },
+  1,
+  2
+);
 // count === 6
 
 // Values one of multiple types are returned
@@ -48,7 +59,7 @@ var isEnabled = normalize(['string', 'boolean'], true);
 
 // Provide a function as first argument to do custom coercion
 var now = new Date();
-var enabledSince = normalize(function(value) {
+var enabledSince = normalize(function (value) {
   if (value.constructor === Date) {
     return value;
   }
@@ -61,7 +72,7 @@ var result = normalize.number(1);
 var result = normalize.string('');
 var result = normalize.symbol(Symbol());
 var result = normalize.boolean(true);
-var result = normalize.function(function() {});
+var result = normalize.function(function () {});
 var result = normalize.date(new Date());
 ```
 
@@ -114,7 +125,6 @@ Convenience method for `normalize('date', ...)`.
 ## License
 
 MIT
-
 
 <!-- prettier-ignore-start -->
 [downloads-image]: https://img.shields.io/npm/dm/value-or-function.svg?style=flat-square
