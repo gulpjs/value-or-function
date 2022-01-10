@@ -1,12 +1,12 @@
 <p align="center">
-  <a href="http://gulpjs.com">
+  <a href="https://gulpjs.com">
     <img height="257" width="114" src="https://raw.githubusercontent.com/gulpjs/artwork/master/gulp-2x.png">
   </a>
 </p>
 
 # value-or-function
 
-[![NPM version][npm-image]][npm-url] [![Downloads][downloads-image]][npm-url] [![Build Status][travis-image]][travis-url] [![AppVeyor Build Status][appveyor-image]][appveyor-url] [![Coveralls Status][coveralls-image]][coveralls-url] [![Gitter chat][gitter-image]][gitter-url]
+[![NPM version][npm-image]][npm-url] [![Downloads][downloads-image]][npm-url] [![Build Status][ci-image]][ci-url] [![Coveralls Status][coveralls-image]][coveralls-url]
 
 Normalize a value or function, applying extra args to the function
 
@@ -115,18 +115,15 @@ Convenience method for `normalize('date', ...)`.
 
 MIT
 
-[downloads-image]: http://img.shields.io/npm/dm/value-or-function.svg
+
+<!-- prettier-ignore-start -->
+[downloads-image]: https://img.shields.io/npm/dm/value-or-function.svg?style=flat-square
 [npm-url]: https://npmjs.org/package/value-or-function
-[npm-image]: http://img.shields.io/npm/v/value-or-function.svg
+[npm-image]: https://img.shields.io/npm/v/value-or-function.svg?style=flat-square
 
-[travis-url]: https://travis-ci.org/gulpjs/value-or-function
-[travis-image]: http://img.shields.io/travis/gulpjs/value-or-function.svg?label=travis-ci
-
-[appveyor-url]: https://ci.appveyor.com/project/gulpjs/value-or-function
-[appveyor-image]: https://img.shields.io/appveyor/ci/gulpjs/value-or-function.svg?label=appveyor
+[ci-url]: https://github.com/gulpjs/value-or-function/actions?query=workflow:dev
+[ci-image]: https://img.shields.io/github/workflow/status/gulpjs/value-or-function/dev?style=flat-square
 
 [coveralls-url]: https://coveralls.io/r/gulpjs/value-or-function
-[coveralls-image]: http://img.shields.io/coveralls/gulpjs/value-or-function/master.svg
-
-[gitter-url]: https://gitter.im/gulpjs/gulp
-[gitter-image]: https://badges.gitter.im/gulpjs/gulp.png
+[coveralls-image]: https://img.shields.io/coveralls/gulpjs/value-or-function/master.svg?style=flat-square
+<!-- prettier-ignore-end -->
