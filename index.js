@@ -16,8 +16,21 @@ function normalize(coercer, value) {
     if (coercer === 'function') {
       return value;
     }
+    if (Array.isArray(coercer) && coercer.indexOf('function') >= 0) {
+      return value;
+    }
     value = value.apply(this, slice(arguments, 2));
   }
+
+  if (typeof value === 'object') {
+    if (coercer === 'object') {
+      return value;
+    }
+    if (Array.isArray(coercer) && coercer.indexOf('object') >= 0) {
+      return value;
+    }
+  }
+
   return coerce(this, coercer, value);
 }
 

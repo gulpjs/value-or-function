@@ -30,9 +30,82 @@ describe('normalize', function () {
     done();
   });
 
-  it('compares each type and the type of the value', function (done) {
+  it('compares each type and the type of the value (string)', function (done) {
     var type = ['number', 'string', 'object'];
     var value = 'test string';
+    var result = normalize(type, value);
+    expect(result).toBe(value);
+    done();
+  });
+
+  it('compares each type and the type of the value (function)', function(done) {
+    var type = ['string', 'function'];
+    var value = function() {};
+    var result = normalize(type, value);
+    expect(result).toBe(value);
+    done();
+  });
+
+  it('compares each type and the type of the value (number)', function(done) {
+    var type = ['string', 'number'];
+    var value = 123;
+    var result = normalize(type, value);
+    expect(result).toBe(value);
+    done();
+  });
+
+  it('compares each type and the type of the value (boolean)', function(done) {
+    var type = ['string', 'boolean'];
+    var value = true;
+    var result = normalize(type, value);
+    expect(result).toBe(value);
+    done();
+  });
+
+  it('compares each type and the type of the value (object)', function(done) {
+    var type = ['string', 'object'];
+    var value = { a: 1 };
+    var result = normalize(type, value);
+    expect(result).toBe(value);
+
+    value = null;
+    result = normalize(type, value);
+    expect(result).toBe(value);
+    done();
+  });
+
+  it('compares each type and the type of the value (date)', function(done) {
+    var type = ['string', 'object'];
+    var value = new Date();
+    var result = normalize(type, value);
+    expect(result).toBe(value);
+    done();
+  });
+
+  it('compares each type and the type of the value (null)', function(done) {
+    var type = ['string', 'object'];
+    var value = null;
+    var result = normalize(type, value);
+    expect(result).toBe(value);
+    done();
+  });
+
+  it('compares each type and the type of the value (undefined)', function(done) {
+    var type = ['string', 'undefined'];
+    var value = undefined;
+    var result = normalize(type, value);
+    expect(result).toBe(value);
+    done();
+  });
+
+  it('compares each type and the type of the value (symbol)', function(done) {
+    if (!global.Symbol) {
+      console.log('Only available on platforms that support Symbol');
+      this.skip();
+      return;
+    }
+    var type = ['string', 'symbol'];
+    var value = Symbol('foo');
     var result = normalize(type, value);
     expect(result).toBe(value);
     done();
