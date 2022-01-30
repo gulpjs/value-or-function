@@ -1,6 +1,6 @@
 {
   "name": "value-or-function",
-  "version": "3.0.0",
+  "version": "4.0.0",
   "description": "Normalize a value or function, applying extra args to the function",
   "author": "Gulp Team <team@gulpjs.com> (http://gulpjs.com/)",
   "contributors": [
