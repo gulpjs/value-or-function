@@ -48,7 +48,7 @@ describe('normalize', function () {
 
   it('compares each type and the type of the value (function)', function (done) {
     var type = ['function', 'string'];
-    var value = function () { };
+    var value = function () {};
     var result = normalize(type, value);
     expect(result).toBe(value);
     done();
@@ -56,7 +56,7 @@ describe('normalize', function () {
 
   it('handles function properly if the first condition is not satisfied', function (done) {
     var type = ['string', 'function'];
-    var value = function () { };
+    var value = function () {};
     var result = normalize(type, value);
     expect(result).toBe(value);
     done();
@@ -487,7 +487,7 @@ describe('normalize.boolean', function () {
 
 describe('normalize.function', function () {
   it('accepts value if typeof function', function (done) {
-    var value = function () { };
+    var value = function () {};
     var result = normalize.function(value);
     expect(result).toBe(value);
     done();
