@@ -12,26 +12,27 @@ var types = [
 ];
 
 function normalize(coercer, value) {
-  if (typeof value === 'function') {
-    if (coercer === 'function') {
-      return value;
-    }
-    if (Array.isArray(coercer) && coercer.indexOf('function') >= 0) {
-      return value;
-    }
-    value = value.apply(this, slice(arguments, 2));
+  var coercers = coercer;
+  if (!Array.isArray(coercers)) {
+    coercers = [coercer];
   }
 
-  if (typeof value === 'object') {
-    if (coercer === 'object') {
-      return value;
-    }
-    if (Array.isArray(coercer) && coercer.indexOf('object') >= 0) {
-      return value;
-    }
-  }
+  var ctx = this;
+  var args = slice(arguments, 2);
 
-  return coerce(this, coercer, value);
+  // Try in order until one returns a non-undefined value
+  var result;
+  coercers.some(function (coercer) {
+    var val = value;
+    if (typeof value === 'function' && coercer !== 'function') {
+      val = value.apply(ctx, args);
+    }
+
+    result = coerce(ctx, coercer, val);
+    return result !== undefined;
+  });
+
+  return result;
 }
 
 function coerce(ctx, coercer, value) {
@@ -48,14 +49,7 @@ function coerce(ctx, coercer, value) {
     return coercer.call(ctx, value);
   }
 
-  // Array of coercers, try in order until one returns a non-null value
-  var result;
-  coercer.some(function (coercer) {
-    result = coerce(ctx, coercer, value);
-    return result != null;
-  });
-
-  return result;
+  throw new Error('Invalid coercer. Can only be a string or function.');
 }
 
 coerce.string = function (value) {

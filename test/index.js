@@ -30,6 +30,14 @@ describe('normalize', function () {
     done();
   });
 
+  it('runs coercers in array order', function (done) {
+    var type = ['string', 'object'];
+    var value = {};
+    var result = normalize(type, value);
+    expect(result).toBe('[object Object]');
+    done();
+  });
+
   it('compares each type and the type of the value (string)', function (done) {
     var type = ['number', 'string', 'object'];
     var value = 'test string';
@@ -38,15 +46,23 @@ describe('normalize', function () {
     done();
   });
 
-  it('compares each type and the type of the value (function)', function(done) {
-    var type = ['string', 'function'];
-    var value = function() {};
+  it('compares each type and the type of the value (function)', function (done) {
+    var type = ['function', 'string'];
+    var value = function () { };
     var result = normalize(type, value);
     expect(result).toBe(value);
     done();
   });
 
-  it('compares each type and the type of the value (number)', function(done) {
+  it('handles function properly if the first condition is not satisfied', function (done) {
+    var type = ['string', 'function'];
+    var value = function () { };
+    var result = normalize(type, value);
+    expect(result).toBe(value);
+    done();
+  });
+
+  it('compares each type and the type of the value (number)', function (done) {
     var type = ['string', 'number'];
     var value = 123;
     var result = normalize(type, value);
@@ -54,7 +70,7 @@ describe('normalize', function () {
     done();
   });
 
-  it('compares each type and the type of the value (boolean)', function(done) {
+  it('compares each type and the type of the value (boolean)', function (done) {
     var type = ['string', 'boolean'];
     var value = true;
     var result = normalize(type, value);
@@ -62,35 +78,64 @@ describe('normalize', function () {
     done();
   });
 
-  it('compares each type and the type of the value (object)', function(done) {
-    var type = ['string', 'object'];
+  it('compares each type and the type of the value (object)', function (done) {
+    var type = ['object', 'string'];
     var value = { a: 1 };
     var result = normalize(type, value);
-    expect(result).toBe(value);
-
-    value = null;
-    result = normalize(type, value);
     expect(result).toBe(value);
     done();
   });
 
-  it('compares each type and the type of the value (date)', function(done) {
+  it('calls `toString` on object if string coercer is first', function (done) {
     var type = ['string', 'object'];
+    var value = { a: 1 };
+    var result = normalize(type, value);
+    expect(result).toBe('[object Object]');
+    done();
+  });
+
+  it('does not fallback to `toString` if created with `Object.create(null)`', function (done) {
+    var type = ['string', 'object'];
+    var value = Object.create(null);
+    value.a = 1;
+    var result = normalize(type, value);
+    expect(result).toBe(value);
+    done();
+  });
+
+  it('compares each type and the type of the value (timestamp)', function (done) {
+    var type = ['date', 'string'];
+    var value = Date.now();
+    var result = normalize(type, value);
+    expect(result).toEqual(new Date(value));
+    done();
+  });
+
+  it('calls `toString` on date if string coercer is first', function (done) {
+    var type = ['string', 'object'];
+    var value = new Date();
+    var result = normalize(type, value);
+    expect(result).toBe(value.toString());
+    done();
+  });
+
+  it('returns date if object coercer is first', function (done) {
+    var type = ['object', 'string'];
     var value = new Date();
     var result = normalize(type, value);
     expect(result).toBe(value);
     done();
   });
 
-  it('compares each type and the type of the value (null)', function(done) {
-    var type = ['string', 'object'];
+  it('handles `null` via the object coercer', function (done) {
+    var type = ['string', 'object', 'number'];
     var value = null;
     var result = normalize(type, value);
     expect(result).toBe(value);
     done();
   });
 
-  it('compares each type and the type of the value (undefined)', function(done) {
+  it('compares each type and the type of the value (undefined)', function (done) {
     var type = ['string', 'undefined'];
     var value = undefined;
     var result = normalize(type, value);
@@ -98,7 +143,7 @@ describe('normalize', function () {
     done();
   });
 
-  it('compares each type and the type of the value (symbol)', function(done) {
+  it('compares each type and the type of the value (symbol)', function (done) {
     if (!global.Symbol) {
       console.log('Only available on platforms that support Symbol');
       this.skip();
@@ -126,6 +171,15 @@ describe('normalize', function () {
     var value = 1;
     var result = normalize(type, value);
     expect(result).toBe(true);
+    done();
+  });
+
+  it('throws if a coercer is not a string or function', function (done) {
+    var type = 123;
+    var value = 1;
+    expect(function () {
+      normalize(type, value);
+    }).toThrow('Invalid coercer. Can only be a string or function.');
     done();
   });
 
@@ -438,7 +492,7 @@ describe('normalize.boolean', function () {
 
 describe('normalize.function', function () {
   it('accepts value if typeof function', function (done) {
-    var value = function () {};
+    var value = function () { };
     var result = normalize.function(value);
     expect(result).toBe(value);
     done();
