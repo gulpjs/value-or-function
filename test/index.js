@@ -144,11 +144,6 @@ describe('normalize', function () {
   });
 
   it('compares each type and the type of the value (symbol)', function (done) {
-    if (!global.Symbol) {
-      console.log('Only available on platforms that support Symbol');
-      this.skip();
-      return;
-    }
     var type = ['string', 'symbol'];
     var value = Symbol('foo');
     var result = normalize(type, value);
