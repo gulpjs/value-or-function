@@ -132,7 +132,7 @@ MIT
 [npm-image]: https://img.shields.io/npm/v/value-or-function.svg?style=flat-square
 
 [ci-url]: https://github.com/gulpjs/value-or-function/actions?query=workflow:dev
-[ci-image]: https://img.shields.io/github/workflow/status/gulpjs/value-or-function/dev?style=flat-square
+[ci-image]: https://img.shields.io/github/actions/workflow/status/gulpjs/value-or-function/dev.yml?branch=master&style=flat-square
 
 [coveralls-url]: https://coveralls.io/r/gulpjs/value-or-function
 [coveralls-image]: https://img.shields.io/coveralls/gulpjs/value-or-function/master.svg?style=flat-square
