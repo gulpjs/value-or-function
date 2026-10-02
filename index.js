@@ -1,14 +1,14 @@
-'use strict';
+"use strict";
 
 // Built-in types
 var types = [
-  'object',
-  'number',
-  'string',
-  'symbol',
-  'boolean',
-  'date',
-  'function', // Weird to expose this
+  "object",
+  "number",
+  "string",
+  "symbol",
+  "boolean",
+  "date",
+  "function", // Weird to expose this
 ];
 
 function normalize(coercer, value) {
@@ -24,7 +24,7 @@ function normalize(coercer, value) {
   var result;
   coercers.some(function (coercer) {
     var val = value;
-    if (typeof value === 'function' && coercer !== 'function') {
+    if (typeof value === "function" && coercer !== "function") {
       val = value.apply(ctx, args);
     }
 
@@ -37,7 +37,7 @@ function normalize(coercer, value) {
 
 function coerce(ctx, coercer, value) {
   // Handle built-in types
-  if (typeof coercer === 'string') {
+  if (typeof coercer === "string") {
     if (coerce[coercer]) {
       return coerce[coercer].call(ctx, value);
     }
@@ -45,35 +45,35 @@ function coerce(ctx, coercer, value) {
   }
 
   // Handle custom coercer
-  if (typeof coercer === 'function') {
+  if (typeof coercer === "function") {
     return coercer.call(ctx, value);
   }
 
-  throw new Error('Invalid coercer. Can only be a string or function.');
+  throw new Error("Invalid coercer. Can only be a string or function.");
 }
 
 coerce.string = function (value) {
   if (
     value != null &&
-    typeof value === 'object' &&
-    typeof value.toString === 'function'
+    typeof value === "object" &&
+    typeof value.toString === "function"
   ) {
     value = value.toString();
   }
-  return typeOf('string', primitive(value));
+  return typeOf("string", primitive(value));
 };
 
 coerce.number = function (value) {
-  return typeOf('number', primitive(value));
+  return typeOf("number", primitive(value));
 };
 
 coerce.boolean = function (value) {
-  return typeOf('boolean', primitive(value));
+  return typeOf("boolean", primitive(value));
 };
 
 coerce.date = function (value) {
   value = primitive(value);
-  if (typeof value === 'number' && !isNaN(value) && isFinite(value)) {
+  if (typeof value === "number" && !isNaN(value) && isFinite(value)) {
     return new Date(value);
   }
 };
@@ -87,8 +87,8 @@ function typeOf(type, value) {
 function primitive(value) {
   if (
     value != null &&
-    typeof value === 'object' &&
-    typeof value.valueOf === 'function'
+    typeof value === "object" &&
+    typeof value.valueOf === "function"
   ) {
     value = value.valueOf();
   }

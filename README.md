@@ -13,30 +13,30 @@ Normalize a value or function, applying extra args to the function
 ## Example
 
 ```js
-var normalize = require('value-or-function');
+var normalize = require("value-or-function");
 
 // Values matching type are returned
-var isEnabled = normalize('boolean', true);
+var isEnabled = normalize("boolean", true);
 // isEnabled === true
 
 // Values not matching type return undefined
-var isEnabled = normalize('boolean', 1);
+var isEnabled = normalize("boolean", 1);
 // isEnabled === undefined
 
 // Functions are called
-var isEnabled = normalize('boolean', function () {
+var isEnabled = normalize("boolean", function () {
   return false;
 });
 // isEnabled === false
 
 // Extra arguments are applied to function
 var count = normalize(
-  'number',
+  "number",
   function (a, b) {
     return a + b;
   },
   1,
-  2
+  2,
 );
 // count === 3
 
@@ -44,17 +44,17 @@ var count = normalize(
 var context = { c: 3 };
 var count = normalize.call(
   context,
-  'number',
+  "number",
   function (a, b) {
     return a + b + this.c;
   },
   1,
-  2
+  2,
 );
 // count === 6
 
 // Values one of multiple types are returned
-var isEnabled = normalize(['string', 'boolean'], true);
+var isEnabled = normalize(["string", "boolean"], true);
 // isEnabled === true
 
 // Provide a function as first argument to do custom coercion
@@ -69,7 +69,7 @@ var enabledSince = normalize(function (value) {
 // Convenience methods are available for the built-in types
 var result = normalize.object({});
 var result = normalize.number(1);
-var result = normalize.string('');
+var result = normalize.string("");
 var result = normalize.symbol(Symbol());
 var result = normalize.boolean(true);
 var result = normalize.function(function () {});
