@@ -13,30 +13,30 @@ Normalize a value or function, applying extra args to the function
 ## Example
 
 ```js
-var normalize = require('value-or-function');
+var normalize = require("value-or-function");
 
 // Values matching type are returned
-var isEnabled = normalize('boolean', true);
+var isEnabled = normalize("boolean", true);
 // isEnabled === true
 
 // Values not matching type return undefined
-var isEnabled = normalize('boolean', 1);
+var isEnabled = normalize("boolean", 1);
 // isEnabled === undefined
 
 // Functions are called
-var isEnabled = normalize('boolean', function () {
+var isEnabled = normalize("boolean", function () {
   return false;
 });
 // isEnabled === false
 
 // Extra arguments are applied to function
 var count = normalize(
-  'number',
+  "number",
   function (a, b) {
     return a + b;
   },
   1,
-  2
+  2,
 );
 // count === 3
 
@@ -44,17 +44,17 @@ var count = normalize(
 var context = { c: 3 };
 var count = normalize.call(
   context,
-  'number',
+  "number",
   function (a, b) {
     return a + b + this.c;
   },
   1,
-  2
+  2,
 );
 // count === 6
 
 // Values one of multiple types are returned
-var isEnabled = normalize(['string', 'boolean'], true);
+var isEnabled = normalize(["string", "boolean"], true);
 // isEnabled === true
 
 // Provide a function as first argument to do custom coercion
@@ -69,7 +69,7 @@ var enabledSince = normalize(function (value) {
 // Convenience methods are available for the built-in types
 var result = normalize.object({});
 var result = normalize.number(1);
-var result = normalize.string('');
+var result = normalize.string("");
 var result = normalize.symbol(Symbol());
 var result = normalize.boolean(true);
 var result = normalize.function(function () {});
@@ -122,6 +122,16 @@ Convenience method for `normalize('function', ...)`.
 
 Convenience method for `normalize('date', ...)`.
 
+## Strict No LLM / No AI Policy
+
+No LLMs for issues.
+
+No LLMs for patches / pull requests.
+
+No LLMs for comments on the bug tracker, including translation.
+
+English is encouraged, but not required. You are welcome to post in your native language and rely on others to have their own translation tools of choice to interpret your words.
+
 ## License
 
 MIT
@@ -131,9 +141,9 @@ MIT
 [npm-url]: https://npmjs.org/package/value-or-function
 [npm-image]: https://img.shields.io/npm/v/value-or-function.svg?style=flat-square
 
-[ci-url]: https://github.com/gulpjs/value-or-function/actions?query=workflow:dev
-[ci-image]: https://img.shields.io/github/actions/workflow/status/gulpjs/value-or-function/dev.yml?branch=master&style=flat-square
+[ci-url]: https://github.com/gulpjs/value-or-function/actions/workflows/dev.yml
+[ci-image]: https://img.shields.io/github/actions/workflow/status/gulpjs/value-or-function/dev.yml?style=flat-square
 
 [coveralls-url]: https://coveralls.io/r/gulpjs/value-or-function
-[coveralls-image]: https://img.shields.io/coveralls/gulpjs/value-or-function/master.svg?style=flat-square
+[coveralls-image]: https://img.shields.io/coveralls/gulpjs/value-or-function/main.svg?style=flat-square
 <!-- prettier-ignore-end -->
