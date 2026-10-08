@@ -1,5 +1,16 @@
 # Changelog
 
+## [5.0.0](https://github.com/gulpjs/value-or-function/compare/v4.0.0...v5.0.0) (2026-10-08)
+
+
+### ⚠ BREAKING CHANGES
+
+* Normalize repository, dropping Node <22.15.0  ([#17](https://github.com/gulpjs/value-or-function/issues/17))
+
+### Miscellaneous Chores
+
+* Normalize repository, dropping Node &lt;22.15.0  ([#17](https://github.com/gulpjs/value-or-function/issues/17)) ([68eb4c7](https://github.com/gulpjs/value-or-function/commit/68eb4c721c53228adfba9f1bb03cdac2e15445f2))
+
 ## [4.0.0](https://www.github.com/gulpjs/value-or-function/compare/v3.0.0...v4.0.0) (2022-01-30)
 
 
