@@ -285,238 +285,238 @@ describe("normalize.object", function () {
     normalize.object.call(context, value);
     assert.strictEqual(value.mock.callCount(), 1);
   });
+});
 
-  describe("normalize.number", function () {
-    it("accepts value if typeof number", function () {
-      var value = 1;
-      var result = normalize.number(value);
-      assert.strictEqual(result, value);
-    });
-
-    it("accepts value if it is not-a-number", function () {
-      var value = Number.NaN;
-      var result = normalize.number(value);
-      assert.strictEqual(Number.isNaN(result), true);
-    });
-
-    it("accepts value if it is infinite", function () {
-      var value = Number.NEGATIVE_INFINITY;
-      var result = normalize.number(value);
-      assert.strictEqual(result, value);
-    });
-
-    it("accepts value if instanceof Number", function () {
-      var expected = 1;
-      var value = new Number(expected);
-      var result = normalize.number(value);
-      assert.strictEqual(result, expected);
-    });
-
-    it("rejects values that won't coerce to number", function () {
-      var value = "invalid";
-      var result = normalize.number(value);
-      assert.strictEqual(result, undefined);
-    });
-
-    it("calls the number function with context, if bound", function (t) {
-      var context = {};
-      var value = t.mock.fn(function () {
-        assert.strictEqual(this, context);
-      });
-      normalize.number.call(context, value);
-      assert.strictEqual(value.mock.callCount(), 1);
-    });
+describe("normalize.number", function () {
+  it("accepts value if typeof number", function () {
+    var value = 1;
+    var result = normalize.number(value);
+    assert.strictEqual(result, value);
   });
 
-  describe("normalize.string", function () {
-    it("accepts value if typeof string", function () {
-      var value = "test string";
-      var result = normalize.string(value);
-      assert.strictEqual(result, value);
-    });
-
-    it("accepts value if instanceof String", function () {
-      var expected = "test string";
-      var value = new String(expected);
-      var result = normalize.string(value);
-      assert.strictEqual(result, expected);
-    });
-
-    it("accepts value if it is an Object", function () {
-      var expected = "test string";
-      var value = {
-        toString: function () {
-          return expected;
-        },
-      };
-      var result = normalize.string(value);
-      assert.strictEqual(result, expected);
-    });
-
-    it("rejects Object if its toString doesn't return string", function () {
-      var value = {
-        toString: function () {
-          return {};
-        },
-      };
-      var result = normalize.string(value);
-      assert.strictEqual(result, undefined);
-    });
-
-    it("rejects values that won't coerce to string", function () {
-      var value = undefined;
-      var result = normalize.string(value);
-      assert.strictEqual(result, undefined);
-    });
-
-    it("calls the string function with context, if bound", function (t) {
-      var context = {};
-      var value = t.mock.fn(function () {
-        assert.strictEqual(this, context);
-      });
-      normalize.string.call(context, value);
-      assert.strictEqual(value.mock.callCount(), 1);
-    });
+  it("accepts value if it is not-a-number", function () {
+    var value = Number.NaN;
+    var result = normalize.number(value);
+    assert.strictEqual(Number.isNaN(result), true);
   });
 
-  describe("normalize.symbol", function () {
-    it("compares value to typeof symbol", function () {
-      var value = Symbol();
-      var result = normalize.symbol(value);
-      assert.strictEqual(result, value);
-    });
-
-    it("rejects values that are not Symbol", function () {
-      var value = "invalid";
-      var result = normalize.symbol(value);
-      assert.strictEqual(result, undefined);
-    });
-
-    it("calls the symbol function with context, if bound", function (t) {
-      var context = {};
-      var value = t.mock.fn(function () {
-        assert.strictEqual(this, context);
-      });
-      normalize.symbol.call(context, value);
-      assert.strictEqual(value.mock.callCount(), 1);
-    });
+  it("accepts value if it is infinite", function () {
+    var value = Number.NEGATIVE_INFINITY;
+    var result = normalize.number(value);
+    assert.strictEqual(result, value);
   });
 
-  describe("normalize.boolean", function () {
-    it("accepts value if typeof boolean", function () {
-      var value = true;
-      var result = normalize.boolean(value);
-      assert.strictEqual(result, value);
-    });
-
-    it("accepts value if instanceof Boolean", function () {
-      var expected = true;
-      var value = new Boolean(expected);
-      var result = normalize.boolean(value);
-      assert.strictEqual(result, expected);
-    });
-
-    it("rejects values that won't coerce to boolean", function () {
-      var value = "invalid";
-      var result = normalize.boolean(value);
-      assert.strictEqual(result, undefined);
-    });
-
-    it("calls the boolean function with context, if bound", function (t) {
-      var context = {};
-      var value = t.mock.fn(function () {
-        assert.strictEqual(this, context);
-      });
-      normalize.boolean.call(context, value);
-      assert.strictEqual(value.mock.callCount(), 1);
-    });
+  it("accepts value if instanceof Number", function () {
+    var expected = 1;
+    var value = new Number(expected);
+    var result = normalize.number(value);
+    assert.strictEqual(result, expected);
   });
 
-  describe("normalize.function", function () {
-    it("accepts value if typeof function", function () {
-      var value = function () {};
-      var result = normalize.function(value);
-      assert.strictEqual(result, value);
-    });
-
-    it("never calls the function", function (t) {
-      var value = t.mock.fn(() => {});
-      var result = normalize.function(value);
-      assert.strictEqual(result, value);
-      assert.strictEqual(value.mock.callCount(), 0);
-    });
-
-    it("rejects values that won't coerce to function", function () {
-      var value = "invalid";
-      var result = normalize.function(value);
-      assert.strictEqual(result, undefined);
-    });
+  it("rejects values that won't coerce to number", function () {
+    var value = "invalid";
+    var result = normalize.number(value);
+    assert.strictEqual(result, undefined);
   });
 
-  describe("normalize.date", function () {
-    it("coerces a number to a Date object", function () {
-      var value = 1;
-      var expected = new Date(value);
-      var result = normalize.date(value);
-      assert.deepStrictEqual(result, expected);
+  it("calls the number function with context, if bound", function (t) {
+    var context = {};
+    var value = t.mock.fn(function () {
+      assert.strictEqual(this, context);
     });
+    normalize.number.call(context, value);
+    assert.strictEqual(value.mock.callCount(), 1);
+  });
+});
 
-    it("rejects numbers with not-a-number values", function () {
-      var value = Number.NaN;
-      var result = normalize.date(value);
-      assert.strictEqual(result, undefined);
-    });
+describe("normalize.string", function () {
+  it("accepts value if typeof string", function () {
+    var value = "test string";
+    var result = normalize.string(value);
+    assert.strictEqual(result, value);
+  });
 
-    it("rejects numbers with infinite values", function () {
-      var value = Number.POSITIVE_INFINITY;
-      var result = normalize.date(value);
-      assert.strictEqual(result, undefined);
-    });
+  it("accepts value if instanceof String", function () {
+    var expected = "test string";
+    var value = new String(expected);
+    var result = normalize.string(value);
+    assert.strictEqual(result, expected);
+  });
 
-    it("accepts objects that are Numbers", function () {
-      var value = new Number(1);
-      var expected = new Date(value);
-      var result = normalize.date(value);
-      assert.deepStrictEqual(result, expected);
-    });
+  it("accepts value if it is an Object", function () {
+    var expected = "test string";
+    var value = {
+      toString: function () {
+        return expected;
+      },
+    };
+    var result = normalize.string(value);
+    assert.strictEqual(result, expected);
+  });
 
-    it("rejects Numbers with not-a-number values", function () {
-      var value = new Number(Number.NaN);
-      var result = normalize.date(value);
-      assert.strictEqual(result, undefined);
-    });
+  it("rejects Object if its toString doesn't return string", function () {
+    var value = {
+      toString: function () {
+        return {};
+      },
+    };
+    var result = normalize.string(value);
+    assert.strictEqual(result, undefined);
+  });
 
-    it("rejects Numbers with infinite values", function () {
-      var value = new Number(Number.POSITIVE_INFINITY);
-      var result = normalize.date(value);
-      assert.strictEqual(result, undefined);
-    });
+  it("rejects values that won't coerce to string", function () {
+    var value = undefined;
+    var result = normalize.string(value);
+    assert.strictEqual(result, undefined);
+  });
 
-    it("accepts objects that are valid Dates", function () {
-      var value = new Date();
-      var result = normalize.date(value);
-      assert.deepStrictEqual(result, value);
+  it("calls the string function with context, if bound", function (t) {
+    var context = {};
+    var value = t.mock.fn(function () {
+      assert.strictEqual(this, context);
     });
+    normalize.string.call(context, value);
+    assert.strictEqual(value.mock.callCount(), 1);
+  });
+});
 
-    it("rejects Dates that are invalid", function () {
-      var value = new Date(undefined);
-      var result = normalize.date(value);
-      assert.strictEqual(result, undefined);
-    });
+describe("normalize.symbol", function () {
+  it("compares value to typeof symbol", function () {
+    var value = Symbol();
+    var result = normalize.symbol(value);
+    assert.strictEqual(result, value);
+  });
 
-    it("rejects object that are not dates", function () {
-      var value = "invalid";
-      var result = normalize.date(value);
-      assert.strictEqual(result, undefined);
-    });
+  it("rejects values that are not Symbol", function () {
+    var value = "invalid";
+    var result = normalize.symbol(value);
+    assert.strictEqual(result, undefined);
+  });
 
-    it("calls the date function with context, if bound", function (t) {
-      var context = {};
-      var value = t.mock.fn(function () {
-        assert.strictEqual(this, context);
-      });
-      normalize.date.call(context, value);
-      assert.strictEqual(value.mock.callCount(), 1);
+  it("calls the symbol function with context, if bound", function (t) {
+    var context = {};
+    var value = t.mock.fn(function () {
+      assert.strictEqual(this, context);
     });
+    normalize.symbol.call(context, value);
+    assert.strictEqual(value.mock.callCount(), 1);
+  });
+});
+
+describe("normalize.boolean", function () {
+  it("accepts value if typeof boolean", function () {
+    var value = true;
+    var result = normalize.boolean(value);
+    assert.strictEqual(result, value);
+  });
+
+  it("accepts value if instanceof Boolean", function () {
+    var expected = true;
+    var value = new Boolean(expected);
+    var result = normalize.boolean(value);
+    assert.strictEqual(result, expected);
+  });
+
+  it("rejects values that won't coerce to boolean", function () {
+    var value = "invalid";
+    var result = normalize.boolean(value);
+    assert.strictEqual(result, undefined);
+  });
+
+  it("calls the boolean function with context, if bound", function (t) {
+    var context = {};
+    var value = t.mock.fn(function () {
+      assert.strictEqual(this, context);
+    });
+    normalize.boolean.call(context, value);
+    assert.strictEqual(value.mock.callCount(), 1);
+  });
+});
+
+describe("normalize.function", function () {
+  it("accepts value if typeof function", function () {
+    var value = function () {};
+    var result = normalize.function(value);
+    assert.strictEqual(result, value);
+  });
+
+  it("never calls the function", function (t) {
+    var value = t.mock.fn(() => {});
+    var result = normalize.function(value);
+    assert.strictEqual(result, value);
+    assert.strictEqual(value.mock.callCount(), 0);
+  });
+
+  it("rejects values that won't coerce to function", function () {
+    var value = "invalid";
+    var result = normalize.function(value);
+    assert.strictEqual(result, undefined);
+  });
+});
+
+describe("normalize.date", function () {
+  it("coerces a number to a Date object", function () {
+    var value = 1;
+    var expected = new Date(value);
+    var result = normalize.date(value);
+    assert.deepStrictEqual(result, expected);
+  });
+
+  it("rejects numbers with not-a-number values", function () {
+    var value = Number.NaN;
+    var result = normalize.date(value);
+    assert.strictEqual(result, undefined);
+  });
+
+  it("rejects numbers with infinite values", function () {
+    var value = Number.POSITIVE_INFINITY;
+    var result = normalize.date(value);
+    assert.strictEqual(result, undefined);
+  });
+
+  it("accepts objects that are Numbers", function () {
+    var value = new Number(1);
+    var expected = new Date(value);
+    var result = normalize.date(value);
+    assert.deepStrictEqual(result, expected);
+  });
+
+  it("rejects Numbers with not-a-number values", function () {
+    var value = new Number(Number.NaN);
+    var result = normalize.date(value);
+    assert.strictEqual(result, undefined);
+  });
+
+  it("rejects Numbers with infinite values", function () {
+    var value = new Number(Number.POSITIVE_INFINITY);
+    var result = normalize.date(value);
+    assert.strictEqual(result, undefined);
+  });
+
+  it("accepts objects that are valid Dates", function () {
+    var value = new Date();
+    var result = normalize.date(value);
+    assert.deepStrictEqual(result, value);
+  });
+
+  it("rejects Dates that are invalid", function () {
+    var value = new Date(undefined);
+    var result = normalize.date(value);
+    assert.strictEqual(result, undefined);
+  });
+
+  it("rejects object that are not dates", function () {
+    var value = "invalid";
+    var result = normalize.date(value);
+    assert.strictEqual(result, undefined);
+  });
+
+  it("calls the date function with context, if bound", function (t) {
+    var context = {};
+    var value = t.mock.fn(function () {
+      assert.strictEqual(this, context);
+    });
+    normalize.date.call(context, value);
+    assert.strictEqual(value.mock.callCount(), 1);
   });
 });
