@@ -265,7 +265,7 @@ describe("normalize.object", function () {
     assert.strictEqual(strObjResult, strObj);
   });
 
-  it("accpets value if it is null", function () {
+  it("accepts value if it is null", function () {
     var value = null;
     var result = normalize.object(value);
     assert.strictEqual(result, null);
