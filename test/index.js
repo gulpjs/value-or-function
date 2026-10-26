@@ -244,6 +244,7 @@ describe("normalize", function () {
     });
     var result = normalize(coercer, value);
     assert.strictEqual(result, undefined);
+    assert.strictEqual(coercer.mock.callCount(), 1);
     assert.strictEqual(value.mock.callCount(), 1);
   });
 });
